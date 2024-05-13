@@ -9,9 +9,9 @@ cd /ops
 
 CONFIGDIR=/ops/shared/config
 
-CONSULVERSION=1.18.1
-VAULTVERSION=1.16.2
-NOMADVERSION=1.7.7
+CONSULVERSION=1.18.1+ent
+VAULTVERSION=1.16.2+ent
+NOMADVERSION=1.7.7+ent
 CONSULTEMPLATEVERSION=0.37.5
 
 CONSULTEMPLATECONFIGDIR=/etc/consul-template.d
@@ -75,7 +75,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 
 # Install HashiStack Packages
 sudo apt-get update && sudo apt-get -y install \
-	consul=$CONSULVERSION* \
-	nomad=$NOMADVERSION* \
-	vault=$VAULTVERSION* \
+	consul-enterprise=$CONSULVERSION* \
+	nomad-enterprise=$NOMADVERSION* \
+	vault-enterprise=$VAULTVERSION* \
 	consul-template=$CONSULTEMPLATEVERSION*

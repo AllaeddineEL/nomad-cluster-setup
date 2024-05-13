@@ -74,6 +74,13 @@ resource "google_compute_firewall" "clients_ingress" {
   }
 }
 
+data "google_compute_image" "hashistack_image" {
+
+  most_recent = true
+  filter      = "name eq ^hashistack.*"
+
+}
+
 resource "google_compute_instance" "server" {
   count        = var.server_count
   name         = "${var.name}-server-${count.index}"
@@ -85,7 +92,7 @@ resource "google_compute_instance" "server" {
 
   boot_disk {
     initialize_params {
-      image = var.machine_image
+      image = data.google_compute_image.hashistack_image.self_link
       size  = var.root_block_device_size
     }
   }
@@ -127,7 +134,7 @@ resource "google_compute_instance" "client" {
 
   boot_disk {
     initialize_params {
-      image = var.machine_image
+      image = data.google_compute_image.hashistack_image.self_link
       size  = var.root_block_device_size
     }
   }

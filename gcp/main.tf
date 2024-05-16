@@ -121,6 +121,24 @@ resource "google_compute_instance" "server" {
     nomad_consul_token_id     = var.nomad_consul_token_id
     nomad_consul_token_secret = var.nomad_consul_token_secret
   })
+
+  metadata = {
+    "ssh-keys" = <<EOT
+      ubuntu:${trimspace(tls_private_key.ssh_key.public_key_openssh)}
+     EOT
+  }
+  provisioner "file" {
+    source      = "/root/license.nomad"
+    destination = "/etc/nomad.d/license.hclic"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = tls_private_key.ssh_key.private_key_openssh
+      agent       = "false"
+      host        = self.network_interface.0.access_config.0.nat_ip
+    }
+  }
 }
 
 resource "google_compute_instance" "client" {

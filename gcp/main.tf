@@ -142,9 +142,9 @@ resource "google_compute_instance" "server" {
   provisioner "remote-exec" {
 
     inline = [
-      "sudo mv /tmp/license.nomad /etc/nomad.d/license.hclic",
-      "sudo mv /tmp/license.vault /etc/vault.d/license.hclic",
-      "sudo mv /tmp/license.consul /etc/consul.d/license.hclic",
+      "sudo mv /tmp/license/license.nomad /etc/nomad.d/license.hclic",
+      "sudo mv /tmp/license/license.vault /etc/vault.d/license.hclic",
+      "sudo mv /tmp/license/license.consul /etc/consul.d/license.hclic",
     ]
   }
 

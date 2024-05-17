@@ -10,9 +10,6 @@ variable "zone" {
   description = "The GCP zone to deploy to."
 }
 
-variable "machine_image" {
-  description = "The compute image to use for the server and client machines. Output from the Packer build process."
-}
 
 variable "name" {
   description = "Prefix used to name various infrastructure components. Alphanumeric characters only."

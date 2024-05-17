@@ -3,7 +3,7 @@ output "lb_address_consul_nomad" {
 }
 
 output "consul_bootstrap_token_secret" {
-  value = var.nomad_consul_token_secret
+  value = ransdom_uuid.consul_token.1.result
 }
 
 output "IP_Addresses" {

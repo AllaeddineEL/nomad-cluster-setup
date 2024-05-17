@@ -80,6 +80,9 @@ data "google_compute_image" "hashistack_image" {
   filter      = "name eq ^hashistack.*"
 
 }
+resource "random_uuid" "consul_token" {
+  count = 2
+}
 
 resource "google_compute_instance" "server" {
   count        = var.server_count
@@ -118,9 +121,8 @@ resource "google_compute_instance" "server" {
     cloud_env                 = "gce"
     retry_join                = var.retry_join
     nomad_binary              = var.nomad_binary
-    nomad_consul_token_id     = var.nomad_consul_token_id
-    nomad_consul_token_secret = var.nomad_consul_token_secret
-  })
+    nomad_consul_token_id     = random_uuid.consul_token.0.result
+    nomad_consul_token_secret = ransdom_uuid.consul_token.1.result
 
   metadata = {
     "ssh-keys" = <<EOT

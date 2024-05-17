@@ -5,8 +5,6 @@ zone                      = "europe-west1-b"
 
 # Terraform variables (all are required)
 retry_join                = "project_name=GCP_PROJECT_ID zone_pattern=europe-west1-b provider=gce tag_value=auto-join"
-nomad_consul_token_id     = "123e4567-e89b-12d3-a456-426614174000"
-nomad_consul_token_secret = "123e4567-e89b-12d3-a456-426614174000"
 
 # These variables will default to the values shown
 # and do not need to be updated unless you want to

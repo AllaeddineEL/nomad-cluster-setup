@@ -127,42 +127,27 @@ resource "google_compute_instance" "server" {
       ubuntu:${trimspace(tls_private_key.ssh_key.public_key_openssh)}
      EOT
   }
-  provisioner "file" {
-    source      = "/root/license.nomad"
-    destination = "/etc/nomad.d/license.hclic"
 
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      private_key = tls_private_key.ssh_key.private_key_openssh
-      agent       = "false"
-      host        = self.network_interface.0.access_config.0.nat_ip
-    }
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = tls_private_key.ssh_key.private_key_openssh
+    agent       = "false"
+    host        = self.network_interface.0.access_config.0.nat_ip
   }
   provisioner "file" {
-    source      = "/root/license.vault"
-    destination = "/etc/vault.d/license.hclic"
-
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      private_key = tls_private_key.ssh_key.private_key_openssh
-      agent       = "false"
-      host        = self.network_interface.0.access_config.0.nat_ip
-    }
+    source      = "/root/license"
+    destination = "/tmp"
   }
-  provisioner "file" {
-    source      = "/root/license.consul"
-    destination = "/etc/consul.d/license.hclic"
+  provisioner "remote-exec" {
 
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      private_key = tls_private_key.ssh_key.private_key_openssh
-      agent       = "false"
-      host        = self.network_interface.0.access_config.0.nat_ip
-    }
+    inline = [
+      "sudo mv /tmp/license.nomad /etc/nomad.d/license.hclic",
+      "sudo mv /tmp/license.vault /etc/vault.d/license.hclic",
+      "sudo mv /tmp/license.consul /etc/consul.d/license.hclic",
+    ]
   }
+
 }
 
 resource "google_compute_instance" "client" {

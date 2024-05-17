@@ -139,6 +139,30 @@ resource "google_compute_instance" "server" {
       host        = self.network_interface.0.access_config.0.nat_ip
     }
   }
+  provisioner "file" {
+    source      = "/root/license.vault"
+    destination = "/etc/vault.d/license.hclic"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = tls_private_key.ssh_key.private_key_openssh
+      agent       = "false"
+      host        = self.network_interface.0.access_config.0.nat_ip
+    }
+  }
+  provisioner "file" {
+    source      = "/root/license.consul"
+    destination = "/etc/consul.d/license.hclic"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = tls_private_key.ssh_key.private_key_openssh
+      agent       = "false"
+      host        = self.network_interface.0.access_config.0.nat_ip
+    }
+  }
 }
 
 resource "google_compute_instance" "client" {

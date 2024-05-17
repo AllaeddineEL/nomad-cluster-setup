@@ -4,8 +4,7 @@ region                    = "europe-west1"
 zone                      = "europe-west1-b"
 
 # Terraform variables (all are required)
-retry_join                = "project_name=${var.project} zone_pattern=${var.zone} provider=gce tag_value=auto-join"
-machine_image             = "MACHINE_IMAGE_FROM_PACKER_BUILD"
+retry_join                = "project_name=GCP_PROJECT_ID zone_pattern=europe-west1-b provider=gce tag_value=auto-join"
 nomad_consul_token_id     = "123e4567-e89b-12d3-a456-426614174000"
 nomad_consul_token_secret = "123e4567-e89b-12d3-a456-426614174000"
 

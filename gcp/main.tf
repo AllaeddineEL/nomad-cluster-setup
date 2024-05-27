@@ -121,9 +121,9 @@ resource "google_compute_instance" "server" {
     cloud_env                 = "gce"
     retry_join                = var.retry_join
     nomad_binary              = var.nomad_binary
-    nomad_consul_token_id     = random_uuid.consul_token.0.result
-    nomad_consul_token_secret = ransdom_uuid.consul_token.1.result
-
+    nomad_consul_token_id     = random_uuid.consul_token[0].result
+    nomad_consul_token_secret = random_uuid.consul_token[1].result
+  })
   metadata = {
     "ssh-keys" = <<EOT
       ubuntu:${trimspace(tls_private_key.ssh_key.public_key_openssh)}
@@ -188,6 +188,6 @@ resource "google_compute_instance" "client" {
     cloud_env                 = "gce"
     retry_join                = var.retry_join
     nomad_binary              = var.nomad_binary
-    nomad_consul_token_secret = var.nomad_consul_token_secret
+    nomad_consul_token_secret = random_uuid.consul_token.1.result
   })
 }

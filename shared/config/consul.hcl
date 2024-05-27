@@ -4,7 +4,7 @@ client_addr = "0.0.0.0"
 advertise_addr = "IP_ADDRESS"
 
 bootstrap_expect = SERVER_COUNT
-
+license_path = "/etc/consul.d/license.hclic"
 acl {
     enabled = true
     default_policy = "deny"

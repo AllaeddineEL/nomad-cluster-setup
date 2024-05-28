@@ -83,5 +83,7 @@ nomad acl token create -token "$(cat $NOMAD_BOOTSTRAP_TOKEN)" -name "read-token"
 # Write user token to kv
 consul kv put -token-file=$CONSUL_BOOTSTRAP_TOKEN nomad_user_token "$(cat $NOMAD_USER_TOKEN)"
 
+consul kv put -token-file=$CONSUL_BOOTSTRAP_TOKEN nomad_mgmt_token "$(cat $NOMAD_BOOTSTRAP_TOKEN)"
+
 echo "ACL bootstrap end"
 

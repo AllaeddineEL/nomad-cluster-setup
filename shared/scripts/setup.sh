@@ -11,7 +11,7 @@ CONFIGDIR=/ops/shared/config
 
 CONSULVERSION=1.18.1+ent
 VAULTVERSION=1.16.2+ent
-NOMADVERSION=1.8.0-beta.1+ent
+NOMADVERSION=1.7.7+ent
 CONSULTEMPLATEVERSION=0.37.5
 
 CONSULTEMPLATECONFIGDIR=/etc/consul-template.d
@@ -35,7 +35,7 @@ case $CLOUD_ENV in
     exit "CLOUD_ENV not set to one of aws, gce, or azure - exiting."
     ;;
 esac
-
+sudo gpg --refresh-keys
 sudo add-apt-repository universe && sudo apt-get update
 sudo apt-get install -y unzip tree redis-tools jq curl tmux
 sudo apt-get clean

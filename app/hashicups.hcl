@@ -100,7 +100,7 @@ job "hashicups" {
         port = "db"
         # Update to something like attr.unique.network.ip-address if
         # running on local nomad cluster (agent -dev)
-        address  = attr.unique.platform.aws.public-ipv4
+       # address  = attr.unique.platform.aws.public-ipv4
       }
       meta {
         service = "database"
@@ -133,7 +133,7 @@ job "hashicups" {
         name = "product-api"
         provider = "consul"
         port = "product-api"
-        address  = attr.unique.platform.aws.public-ipv4
+       # address  = attr.unique.platform.aws.public-ipv4
       }
       meta {
         service = "product-api"
@@ -167,7 +167,7 @@ EOH
         name = "frontend"
         provider = "consul"
         port = "frontend"
-        address  = attr.unique.platform.aws.public-ipv4
+       # address  = attr.unique.platform.aws.public-ipv4
       }
       meta {
         service = "frontend"
@@ -206,7 +206,7 @@ EOH
         name = "payments-api"
         provider = "consul"
         port = "payments-api"
-        address  = attr.unique.platform.aws.public-ipv4
+       # address  = attr.unique.platform.aws.public-ipv4
       }
       meta {
         service = "payments-api"
@@ -239,7 +239,7 @@ EOH
         name = "public-api"
         provider = "consul"
         port = "public-api"
-        address  = attr.unique.platform.aws.public-ipv4
+      #  address  = attr.unique.platform.aws.public-ipv4
       }
       meta {
         service = "public-api"
@@ -276,7 +276,7 @@ EOH
         name = "nginx"
         provider = "consul"
         port = "nginx"
-        address  = attr.unique.platform.aws.public-hostname
+     #   address  = attr.unique.platform.aws.public-hostname
       }
       meta {
         service = "nginx-reverse-proxy"

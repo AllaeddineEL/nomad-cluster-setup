@@ -3,7 +3,7 @@ output "lb_address_consul_nomad" {
 }
 
 output "consul_bootstrap_token_secret" {
-  value = ransdom_uuid.consul_token.1.result
+  value = random_uuid.consul_token[1].result
 }
 
 output "IP_Addresses" {
@@ -14,6 +14,6 @@ Client public IPs: ${join(", ", google_compute_instance.client[*].network_interf
 Server public IPs: ${join(", ", google_compute_instance.server[*].network_interface.0.access_config.0.nat_ip)}
 
 The Consul UI can be accessed at http://${google_compute_instance.server[0].network_interface.0.access_config.0.nat_ip}:8500/ui
-with the bootstrap token: ${ransdom_uuid.consul_token.1.result}
+with the bootstrap token: ${random_uuid.consul_token[1].result}
 CONFIGURATION
 }

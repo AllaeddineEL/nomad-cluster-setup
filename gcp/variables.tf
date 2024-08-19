@@ -28,12 +28,12 @@ variable "allowlist_ip" {
 
 variable "server_instance_type" {
   description = "The compute engine instance type to use for servers."
-  default     = "e2-micro"
+  default     = "e2-standard-2"
 }
 
 variable "client_instance_type" {
   description = "The compute engine instance type to use for clients."
-  default     = "e2-micro"
+  default     = "e2-standard-2"
 }
 
 variable "server_count" {

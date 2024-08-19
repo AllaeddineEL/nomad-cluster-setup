@@ -5,7 +5,6 @@ set -e
 CONFIGDIR=/ops/shared/config
 
 CONSULCONFIGDIR=/etc/consul.d
-VAULTCONFIGDIR=/etc/vault.d
 NOMADCONFIGDIR=/etc/nomad.d
 CONSULTEMPLATECONFIGDIR=/etc/consul-template.d
 HOME_DIR=ubuntu
@@ -50,17 +49,6 @@ sleep 10
 export CONSUL_HTTP_ADDR=$IP_ADDRESS:8500
 export CONSUL_RPC_ADDR=$IP_ADDRESS:8400
 
-# Vault
-sed -i "s/IP_ADDRESS/$IP_ADDRESS/g" $CONFIGDIR/vault.hcl
-sudo cp $CONFIGDIR/vault.hcl $VAULTCONFIGDIR
-
-#FIXME: Change the systemd unit file so that the startup don't block
-sudo sed -i 's/Type=notify/Type=simple/' /lib/systemd/system/vault.service
-sudo systemctl daemon-reload
-
-sudo systemctl enable vault.service
-sudo systemctl start vault.service
-
 # Nomad
 
 ## Replace existing Nomad binary if remote file exists
@@ -98,6 +86,5 @@ sudo systemctl restart systemd-resolved
 # Set env vars for tool CLIs
 echo "export CONSUL_RPC_ADDR=$IP_ADDRESS:8400" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export CONSUL_HTTP_ADDR=$IP_ADDRESS:8500" | sudo tee --append /home/$HOME_DIR/.bashrc
-echo "export VAULT_ADDR=http://$IP_ADDRESS:8200" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export NOMAD_ADDR=http://$IP_ADDRESS:4646" | sudo tee --append /home/$HOME_DIR/.bashrc
 echo "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"  | sudo tee --append /home/$HOME_DIR/.bashrc

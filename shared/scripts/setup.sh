@@ -10,7 +10,6 @@ cd /ops
 CONFIGDIR=/ops/shared/config
 
 CONSULVERSION=1.19.1+ent
-VAULTVERSION=1.17.3+ent
 NOMADVERSION=1.8.3+ent
 CONSULTEMPLATEVERSION=0.37.5
 
@@ -77,5 +76,4 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt-get update && sudo apt-get -y install \
 	consul-enterprise=$CONSULVERSION* \
 	nomad-enterprise=$NOMADVERSION* \
-	vault-enterprise=$VAULTVERSION* \
 	consul-template=$CONSULTEMPLATEVERSION*

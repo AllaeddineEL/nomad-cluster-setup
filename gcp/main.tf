@@ -24,6 +24,11 @@ resource "google_compute_firewall" "consul_nomad_ui_ingress" {
     protocol = "tcp"
     ports    = [8500]
   }
+  # Vault
+  allow {
+    protocol = "tcp"
+    ports    = [8200]
+  }
 }
 
 resource "google_compute_firewall" "ssh_ingress" {

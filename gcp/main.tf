@@ -210,13 +210,15 @@ resource "google_compute_target_pool" "servers" {
   instances = google_compute_instance.server.*.self_link
 
   health_checks = [
-    google_compute_http_health_check.default.name,
+    google_compute_health_check.default.name,
   ]
 }
 
-resource "google_compute_http_health_check" "default" {
+resource "google_compute_health_check" "default" {
   name               = "default"
-  request_path       = "/"
   check_interval_sec = 1
   timeout_sec        = 1
+  tcp_health_check {
+    port = "8500"
+  }
 }

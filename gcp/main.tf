@@ -197,7 +197,6 @@ resource "google_compute_instance" "client" {
   })
 }
 resource "google_compute_forwarding_rule" "servers_default" {
-  #provider              = google-beta
   project               = var.project
   name                  = var.name
   target                = google_compute_target_pool.servers.self_link
@@ -206,9 +205,7 @@ resource "google_compute_forwarding_rule" "servers_default" {
 resource "google_compute_target_pool" "servers" {
   name = "servers-pool"
 
-  instances = [
-    google_compute_instance.server.*.self_link
-  ]
+  instances = google_compute_instance.server.*.self_link
 
   health_checks = [
     google_compute_http_health_check.default.name,

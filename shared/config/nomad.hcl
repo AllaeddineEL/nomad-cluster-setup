@@ -6,6 +6,7 @@ server {
   enabled          = true
   bootstrap_expect = SERVER_COUNT
   license_path = "/etc/nomad.d/license.hclic"
+  oidc_issuer      = "http://${IP_ADDRESS}:4646"
 }
 
 consul {
@@ -15,12 +16,4 @@ consul {
 
 acl {
   enabled = true
-}
-
-vault {
-  enabled          = false
-  address          = "http://active.vault.service.consul:8200"
-  task_token_ttl   = "1h"
-  create_from_role = "nomad-cluster"
-  token            = ""
 }

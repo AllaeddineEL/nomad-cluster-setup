@@ -107,9 +107,9 @@ resource "google_compute_instance" "server" {
 
   network_interface {
     network = google_compute_network.hashistack.name
-    access_config {
-      // Leave empty to get an ephemeral public IP
-    }
+    # access_config {
+    #   // Leave empty to get an ephemeral public IP
+    # }
   }
 
   service_account {
@@ -128,6 +128,8 @@ resource "google_compute_instance" "server" {
     nomad_binary              = var.nomad_binary
     nomad_consul_token_id     = random_uuid.consul_token[0].result
     nomad_consul_token_secret = random_uuid.consul_token[1].result
+    nomad_license             = file("/root/license/license.nomad")
+    consul_license            = file("/root/license/license.consul")
   })
   metadata = {
     "ssh-keys" = <<EOT
@@ -135,25 +137,25 @@ resource "google_compute_instance" "server" {
      EOT
   }
 
-  connection {
-    type        = "ssh"
-    user        = "ubuntu"
-    private_key = tls_private_key.ssh_key.private_key_openssh
-    agent       = "false"
-    host        = self.network_interface.0.access_config.0.nat_ip
-  }
-  provisioner "file" {
-    source      = "/root/license"
-    destination = "/tmp"
-  }
-  provisioner "remote-exec" {
+  # connection {
+  #   type        = "ssh"
+  #   user        = "ubuntu"
+  #   private_key = tls_private_key.ssh_key.private_key_openssh
+  #   agent       = "false"
+  #   host        = self.network_interface.0.access_config.0.nat_ip
+  # }
+  # provisioner "file" {
+  #   source      = "/root/license"
+  #   destination = "/tmp"
+  # }
+  # provisioner "remote-exec" {
 
-    inline = [
-      "sudo mv /tmp/license/license.nomad /etc/nomad.d/license.hclic",
-      "sudo mv /tmp/license/license.vault /etc/vault.d/license.hclic",
-      "sudo mv /tmp/license/license.consul /etc/consul.d/license.hclic",
-    ]
-  }
+  #   inline = [
+  #     "sudo mv /tmp/license/license.nomad /etc/nomad.d/license.hclic",
+  #     "sudo mv /tmp/license/license.vault /etc/vault.d/license.hclic",
+  #     "sudo mv /tmp/license/license.consul /etc/consul.d/license.hclic",
+  #   ]
+  # }
 
 }
 
@@ -175,9 +177,9 @@ resource "google_compute_instance" "client" {
 
   network_interface {
     network = google_compute_network.hashistack.name
-    access_config {
-      // Leave empty to get an ephemeral public IP
-    }
+    # access_config {
+    #   // Leave empty to get an ephemeral public IP
+    # }
   }
 
   service_account {

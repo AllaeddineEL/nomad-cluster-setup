@@ -6,7 +6,7 @@ server {
   enabled          = true
   bootstrap_expect = SERVER_COUNT
   license_path = "/etc/nomad.d/license.hclic"
-  oidc_issuer      = "http://${IP_ADDRESS}:4646"
+  oidc_issuer      = "http://$IP_ADDRESS:4646"
 }
 
 consul {

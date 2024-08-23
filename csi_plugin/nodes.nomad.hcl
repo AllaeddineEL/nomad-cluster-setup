@@ -14,7 +14,7 @@ EOH
         GOOGLE_APPLICATION_CREDENTIALS = "/secrets/creds.json"
       }
       config {
-        image = "gcr.io/gke-release/gcp-compute-persistent-disk-csi-driver:v0.7.0-gke.0"
+        image = "registry.k8s.io/cloud-provider-gcp/gcp-compute-persistent-disk-csi-driver:v1.13.2"
         args = [
           "--endpoint=unix:///csi/csi.sock",
           "--v=6",

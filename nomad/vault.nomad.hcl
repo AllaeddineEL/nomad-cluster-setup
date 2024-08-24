@@ -2,15 +2,18 @@ job "vault-cluster" {
   namespace   = "vault-cluster"
   datacenters = ["dc1"]
   type        = "service"
-  
+
 
   group "vault" {
     count = 3
 
     volume "vault_data" {
-      type      = "host"
-      source    = "vault_vol"
-      read_only = false
+      type            = "csi"
+      read_only       = false
+      source          = "vault_volume"
+      attachment_mode = "file-system"
+      access_mode     = "single-node-writer"
+      per_alloc       = true
     }
 
     network {
@@ -33,7 +36,7 @@ job "vault-cluster" {
 
       volume_mount {
         volume      = "vault_data"
-        destination = "/vault/file"
+        destination = "${NOMAD_ALLOC_DIR}/vault/data"
         read_only   = false
       }
 
@@ -68,7 +71,7 @@ listener "tcp" {
 }
 
 storage "raft" {
-  path    = "/vault/file"
+  path    = "${NOMAD_ALLOC_DIR}/vault/data"
 
 {{- range nomadService "vault" }}
   retry_join {
@@ -92,11 +95,11 @@ EOH
         provider = "nomad"
 
         check {
-          name      = "vault-api-health-check"
-          type      = "http"
-          path      = "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
-          interval  = "10s"
-          timeout   = "2s"
+          name     = "vault-api-health-check"
+          type     = "http"
+          path     = "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+          interval = "10s"
+          timeout  = "2s"
         }
       }
 

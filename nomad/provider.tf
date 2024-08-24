@@ -13,15 +13,19 @@ terraform {
 }
 
 data "terraform_remote_state" "local" {
-  backend = "remote"
+  backend = "local"
+
   config = {
-    config = {
-      path = ".."
-    }
+    path = "${path.module}/../gcp/terraform.tfstate"
   }
+
 }
 
-
+provider "google" {
+  project = var.project
+  region  = var.region
+  zone    = var.zone
+}
 
 provider "terracurl" {}
 
@@ -32,14 +36,13 @@ provider "consul" {
 }
 
 data "consul_keys" "nomad_token" {
-  depends_on = [time_sleep.wait_30_seconds]
   key {
     name = "nomad_mgmt_token"
-    path = "/kv"
+    path = "nomad_mgmt_token"
   }
 }
 
 provider "nomad" {
-  address   = "http://${data.terraform_remote_state.local.outputs.lb_address_consul_nomad}:4646"
+  address   = "${data.terraform_remote_state.local.outputs.lb_address_consul_nomad}:4646"
   secret_id = data.consul_keys.nomad_token.var.nomad_mgmt_token
 }

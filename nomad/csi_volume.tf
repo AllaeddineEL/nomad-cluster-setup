@@ -8,16 +8,16 @@ data "nomad_plugin" "gcepd" {
   wait_for_healthy = true
 }
 
-resource "nomad_csi_volume" "mysql_volume" {
+resource "nomad_csi_volume" "vault_volume" {
   depends_on = [data.nomad_plugin.gcepd]
-  namespace  = nomad_namespace.vault.name
+  # namespace  = nomad_namespace.vault.name
   lifecycle {
     prevent_destroy = true
   }
 
   plugin_id    = data.nomad_plugin.gcepd.plugin_id
-  volume_id    = "vault_volume"
-  name         = "vault_volume"
+  volume_id    = "vault-volume"
+  name         = "vault-volume"
   capacity_min = "10GB"
   capacity_max = "20GB"
 
@@ -34,8 +34,7 @@ resource "nomad_csi_volume" "mysql_volume" {
     required {
       topology {
         segments = {
-          region = var.region
-          zone   = var.zone
+          "topology.gke.io/zone" = var.zone
         }
       }
     }

@@ -9,15 +9,16 @@ data "nomad_plugin" "gcepd" {
 }
 
 resource "nomad_csi_volume" "vault_volume" {
+  count      = 3
   depends_on = [data.nomad_plugin.gcepd]
-  # namespace  = nomad_namespace.vault.name
-  lifecycle {
-    prevent_destroy = true
-  }
+  namespace  = nomad_namespace.vault.name
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 
   plugin_id    = data.nomad_plugin.gcepd.plugin_id
-  volume_id    = "vault-volume"
-  name         = "vault-volume"
+  volume_id    = "vault-volume[${count.index}]"
+  name         = "vault-volume-${count.index}"
   capacity_min = "10GB"
   capacity_max = "20GB"
 

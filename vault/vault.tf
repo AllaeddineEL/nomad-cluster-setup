@@ -1,7 +1,8 @@
 resource "nomad_job" "vault" {
-  jobspec = file("vault.nomad")
+  jobspec = file("vault.nomad.hcl")
   depends_on = [
-    nomad_namespace.vault
+    nomad_namespace.vault,
+    nomad_csi_volume.vault_volume
   ]
 }
 

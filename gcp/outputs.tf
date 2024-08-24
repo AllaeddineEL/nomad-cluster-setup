@@ -18,4 +18,6 @@ CONFIGURATION
 }
 
 
-#with the bootstrap token: ${data.consul_keys.nomad_token.var.nomad_mgmt_token}
+output "clients_lb" {
+  value = google_compute_forwarding_rule.clients_default.ip_address
+}

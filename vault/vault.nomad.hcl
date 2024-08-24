@@ -10,7 +10,7 @@ job "vault-cluster" {
     volume "vault_data" {
       type            = "csi"
       read_only       = false
-      source          = "vault_volume"
+      source          = "vault-volume"
       attachment_mode = "file-system"
       access_mode     = "single-node-writer"
       per_alloc       = true
@@ -71,7 +71,7 @@ listener "tcp" {
 }
 
 storage "raft" {
-  path    = "${NOMAD_ALLOC_DIR}/vault/data"
+  path    = "{{ env "NOMAD_ALLOC_DIR" }}/vault/data"
 
 {{- range nomadService "vault" }}
   retry_join {

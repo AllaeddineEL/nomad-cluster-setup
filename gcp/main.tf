@@ -210,6 +210,19 @@ resource "google_compute_target_pool" "servers" {
   instances = google_compute_instance.server.*.self_link
 
 }
+
+resource "google_compute_forwarding_rule" "clients_default" {
+  project               = var.project
+  name                  = "clients-${var.name}"
+  target                = google_compute_target_pool.client.self_link
+  load_balancing_scheme = "EXTERNAL"
+}
+resource "google_compute_target_pool" "client" {
+  name = "client-pool"
+
+  instances = google_compute_instance.client.*.self_link
+
+}
 resource "google_compute_router" "router" {
   name    = "hashistack-${var.name}"
   region  = var.region

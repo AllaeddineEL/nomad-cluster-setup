@@ -1,4 +1,5 @@
 job "nodes" {
+  namespace   = "nomad-system"
   datacenters = ["dc1"]
   type = "system"
   group "nodes" {

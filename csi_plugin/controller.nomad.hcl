@@ -1,4 +1,5 @@
 job "controller" {
+  namespace   = "nomad-system"
   datacenters = ["dc1"]
   group "controller" {
     task "plugin" {

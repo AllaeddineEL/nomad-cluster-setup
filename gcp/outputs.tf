@@ -21,3 +21,16 @@ CONFIGURATION
 output "clients_lb" {
   value = google_compute_forwarding_rule.clients_default.ip_address
 }
+
+output "gcp_project" {
+  value = var.project
+}
+output "keyring_location" {
+  value = google_kms_key_ring.key_ring.location
+}
+output "key_ring" {
+  value = google_kms_key_ring.key_ring.name
+}
+output "crypto_key" {
+  value = google_kms_crypto_key.crypto_key.name
+}

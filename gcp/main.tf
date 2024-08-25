@@ -159,6 +159,10 @@ resource "google_compute_instance" "server" {
 
 }
 
+resource "google_service_account" "vault_kms_service_account" {
+  account_id   = "vault-gcpkms"
+  display_name = "Vault KMS for auto-unseal"
+}
 resource "google_compute_instance" "client" {
   count        = var.client_count
   name         = "${var.name}-client-${count.index}"
@@ -184,9 +188,14 @@ resource "google_compute_instance" "client" {
 
   service_account {
     # https://developers.google.com/identity/protocols/googlescopes
+    email = google_service_account.vault_kms_service_account.email
     scopes = [
       "https://www.googleapis.com/auth/compute.readonly",
       "https://www.googleapis.com/auth/logging.write",
+      "cloud-platform",
+      "compute-rw",
+      "userinfo-email",
+      "storage-ro"
     ]
   }
 

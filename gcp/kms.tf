@@ -12,12 +12,15 @@ resource "google_kms_crypto_key" "crypto_key" {
   rotation_period = "100000s"
 }
 
+data "google_compute_default_service_account" "default" {
+}
+
 # Add the service account to the Keyring
 resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
   key_ring_id = google_kms_key_ring.key_ring.id
   role        = "roles/owner"
 
   members = [
-    "serviceAccount:${google_service_account.vault_kms_service_account.email}",
+    "serviceAccount:${data.google_compute_default_service_account.default.email}",
   ]
 }

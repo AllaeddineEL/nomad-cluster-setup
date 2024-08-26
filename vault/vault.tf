@@ -42,7 +42,7 @@ job "vault-cluster" {
 
       volume_mount {
         volume      = "vault_data"
-        destination = "${NOMAD_ALLOC_DIR}/vault/data"
+        destination = "$${NOMAD_ALLOC_DIR}/vault/data"
         read_only   = false
       }
 
@@ -90,7 +90,7 @@ cluster_addr = "http://{{ env "NOMAD_IP_cluster" }}:8201"
 api_addr     = "http://{{ env "NOMAD_IP_api" }}:8200"
 
 seal "gcpckms" {
-  project     = "${data.terraform_remote_state.local.outputs.project}"
+  project     = "${data.terraform_remote_state.local.outputs.gcp_project}"
   region      = "${data.terraform_remote_state.local.outputs.keyring_location}"
   key_ring    = "${data.terraform_remote_state.local.outputs.key_ring}"
   crypto_key  = "${data.terraform_remote_state.local.outputs.crypto_key}"
@@ -122,8 +122,8 @@ EOH
       }
 
       affinity {
-        attribute = "${meta.node_id}"
-        value     = "${NOMAD_ALLOC_ID}"
+        attribute = "$${meta.node_id}"
+        value     = "$${NOMAD_ALLOC_ID}"
         weight    = 100
       }
     }

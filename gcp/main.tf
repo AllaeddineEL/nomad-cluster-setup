@@ -159,17 +159,6 @@ resource "google_compute_instance" "server" {
 
 }
 
-resource "google_service_account" "vault_kms_service_account" {
-  account_id   = "vault-gcpkms"
-  display_name = "Vault KMS for auto-unseal"
-}
-data "google_compute_default_service_account" "default" {
-}
-resource "google_service_account_iam_member" "gce-default-account-iam" {
-  service_account_id = data.google_compute_default_service_account.default.name
-  role               = "roles/iam.serviceAccountUser"
-  member             = "serviceAccount:${google_service_account.vault_kms_service_account.email}"
-}
 resource "google_compute_instance" "client" {
   count        = var.client_count
   name         = "${var.name}-client-${count.index}"

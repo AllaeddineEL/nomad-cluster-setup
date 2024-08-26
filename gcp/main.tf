@@ -75,7 +75,7 @@ resource "google_compute_firewall" "clients_ingress" {
   # nginx example; replace with your application port
   allow {
     protocol = "tcp"
-    ports    = [80]
+    ports    = ["80", "443", "8200"]
   }
 }
 
@@ -184,9 +184,8 @@ resource "google_compute_instance" "client" {
 
   service_account {
     # https://developers.google.com/identity/protocols/googlescopes
-    email = google_service_account.vault_kms_service_account.email
     scopes = [
-      "logging.write",
+      "logging-write",
       "cloud-platform",
       "compute-rw",
       "userinfo-email",

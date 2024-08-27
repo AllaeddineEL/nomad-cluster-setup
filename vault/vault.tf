@@ -49,7 +49,7 @@ job "vault-cluster" {
       config {
         image      = "hashicorp/vault:1.15"
         privileged = true
-
+        network_mode = "host"
         ports = [
           "api",
           "cluster"

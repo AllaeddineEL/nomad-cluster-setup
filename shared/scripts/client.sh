@@ -56,11 +56,24 @@ fi
 sudo cp $CONFIGDIR/nomad_client.hcl $NOMADCONFIGDIR/nomad.hcl
 
 # Install and link CNI Plugins to support Consul Connect-Enabled jobs
-sudo apt install -y containernetworking-plugins
-sudo mkdir /opt/cni && sudo  ln -s /usr/lib/cni /opt/cni/bin
+
+export ARCH_CNI=$( [ $(uname -m) = aarch64 ] && echo arm64 || echo amd64)
+export CNI_PLUGIN_VERSION=v1.5.1
+curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/${CNI_PLUGIN_VERSION}/cni-plugins-linux-${ARCH_CNI}-${CNI_PLUGIN_VERSION}".tgz && \
+sudo mkdir -p /opt/cni/bin && sudo mkdir -p /opt/cni/config && \
+sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz && sudo  ln -s /usr/lib/cni /opt/cni/bin
+sudo cp $CONFIGDIR/cni.json /opt/cni/config/cni.json
+sudo modprobe bridge
+
+sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-arptables
+sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-ip6tables
+sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+sudo apt-get install -y consul-cni
 
 sudo systemctl enable nomad.service
 sudo systemctl start nomad.service
+
 sleep 10
 export NOMAD_ADDR=http://$IP_ADDRESS:4646
 

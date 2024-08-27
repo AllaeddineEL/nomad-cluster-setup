@@ -5,6 +5,8 @@ datacenter = "dc1"
 # Enable the client
 client {
   enabled = true
+  cni_path = "opt/cni/bin"
+  cni_config_dir = "opt/cni/config"
   options {
     "driver.raw_exec.enable"    = "1"
     "docker.privileged.enabled" = "true"

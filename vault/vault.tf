@@ -89,6 +89,7 @@ storage "raft" {
 
 {{- range nomadService "vault" }}
   retry_join {
+    auto_join_scheme = "http" 
     leader_api_addr = "http://{{ .Address }}:{{ .Port }}"
   }
   {{- end }}

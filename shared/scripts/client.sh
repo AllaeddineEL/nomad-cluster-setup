@@ -62,7 +62,7 @@ export CNI_PLUGIN_VERSION=v1.5.1
 curl -L -o cni-plugins.tgz "https://github.com/containernetworking/plugins/releases/download/${CNI_PLUGIN_VERSION}/cni-plugins-linux-${ARCH_CNI}-${CNI_PLUGIN_VERSION}".tgz && \
 sudo mkdir -p /opt/cni/bin && sudo mkdir -p /opt/cni/config && \
 sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz && sudo  ln -s /usr/lib/cni /opt/cni/bin
-sudo cp $CONFIGDIR/cni.json /opt/cni/config/cni.json
+sudo cp $CONFIGDIR/cni.conflist /opt/cni/config/cni.conflist
 sudo modprobe bridge
 
 sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-arptables

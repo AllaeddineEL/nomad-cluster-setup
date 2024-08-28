@@ -34,3 +34,7 @@ output "key_ring" {
 output "crypto_key" {
   value = google_kms_crypto_key.crypto_key.name
 }
+output "kms_sa_key" {
+  sensitive = true
+  value     = google_service_account_key.vault_kms_service_account_key.private_key
+}

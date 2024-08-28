@@ -15,12 +15,20 @@ resource "google_kms_crypto_key" "crypto_key" {
 data "google_compute_default_service_account" "default" {
 }
 
-# Add the service account to the Keyring
+resource "google_service_account" "vault_kms_service_account" {
+  account_id   = "vault-gcpkms"
+  display_name = "Vault KMS for auto-unseal"
+}
+resource "google_service_account_key" "vault_kms_service_account_key" {
+  service_account_id = google_service_account.vault_kms_service_account.name
+}
+
+#Add the service account to the Keyring
 resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
   key_ring_id = google_kms_key_ring.key_ring.id
   role        = "roles/owner"
 
   members = [
-    "serviceAccount:${data.google_compute_default_service_account.default.email}",
+    "serviceAccount:${google_service_account.vault_kms_service_account.email}",
   ]
 }

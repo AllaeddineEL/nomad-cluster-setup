@@ -39,7 +39,15 @@ job "vault-cluster" {
 
     task "vault" {
       driver = "docker"
-
+      template {
+        data = <<EOH
+        ${base64decode(data.terraform_remote_state.local.outputs.kms_sa_key)}
+  EOH
+  destination = "secrets/creds.json"
+      }
+       env {
+           GOOGLE_APPLICATION_CREDENTIALS = "/secrets/creds.json"
+        } 
       volume_mount {
         volume      = "vault_data"
         destination = "$${NOMAD_ALLOC_DIR}/vault/data"

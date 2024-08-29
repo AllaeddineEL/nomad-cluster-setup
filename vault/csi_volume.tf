@@ -1,8 +1,3 @@
-resource "nomad_namespace" "vault" {
-  name        = "vault-cluster"
-  description = "Vault servers namespace"
-}
-
 data "nomad_plugin" "gcepd" {
   plugin_id        = "gcepd"
   wait_for_healthy = true

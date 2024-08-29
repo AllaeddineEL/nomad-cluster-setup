@@ -1,3 +1,7 @@
+resource "nomad_namespace" "vault" {
+  name        = "vault-cluster"
+  description = "Vault servers namespace"
+}
 resource "nomad_job" "vault" {
   #jobspec          = file("vault.nomad.hcl")
 
@@ -5,7 +9,7 @@ resource "nomad_job" "vault" {
   jobspec          = <<EOT
 
 job "vault-cluster" {
-  namespace   = "vault-cluster"
+  namespace   = "${nomad_namespace.vault.name}"
   datacenters = ["dc1"]
   type        = "service"
 
@@ -142,7 +146,6 @@ EOH
   EOT
 
   depends_on = [
-    nomad_namespace.vault,
     nomad_csi_volume.vault_volume
   ]
 }

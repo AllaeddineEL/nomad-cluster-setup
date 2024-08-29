@@ -51,7 +51,9 @@ job "vault-cluster" {
       }
        env {
            GOOGLE_APPLICATION_CREDENTIALS = "/secrets/creds.json"
-           VAULT_LICENSE = "${file("/root/license/license.nomad")}"
+           VAULT_LICENSE = <<EOH
+           ${file("/root/license/license.vault")}
+  EOH
         } 
       volume_mount {
         volume      = "vault_data"

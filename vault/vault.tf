@@ -47,6 +47,7 @@ job "vault-cluster" {
       }
        env {
            GOOGLE_APPLICATION_CREDENTIALS = "/secrets/creds.json"
+           VAULT_LICENSE = "${file("/root/license/license.nomad")}"
         } 
       volume_mount {
         volume      = "vault_data"
@@ -55,7 +56,7 @@ job "vault-cluster" {
       }
 
       config {
-        image      = "hashicorp/vault:1.15"
+        image      = "hashicorp/vault-enterprise:1.17.4-ent"
         privileged = true
         network_mode = "host"
         ports = [

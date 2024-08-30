@@ -84,7 +84,7 @@ job "vault-cluster" {
       template {
         data = <<EOH
 ui = true
-
+cluster_name = "nomad-vault-demo"
 listener "tcp" {
   address         = "[::]:8200"
   cluster_address = "[::]:8201"
@@ -92,6 +92,7 @@ listener "tcp" {
 }
 
 storage "raft" {
+  node_id = "{{ env "NOMAD_ALLOC_NAME" }}"
   path    = "{{ env "NOMAD_ALLOC_DIR" }}/vault/data"
 
 {{- range nomadService "vault" }}
@@ -120,7 +121,7 @@ EOH
       service {
         name     = "vault"
         port     = "api"
-        provider = "nomad"
+        provider = "consul"
 
         check {
           name     = "vault-api-health-check"

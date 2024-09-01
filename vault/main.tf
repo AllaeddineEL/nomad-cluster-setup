@@ -95,7 +95,7 @@ storage "raft" {
   node_id = "{{ env "NOMAD_ALLOC_NAME" }}"
   path    = "{{ env "NOMAD_ALLOC_DIR" }}/vault/data"
 
-{{- range nomadService "vault" }}
+{{- range service "vault" }}
   retry_join {
     auto_join_scheme = "http" 
     leader_api_addr = "http://{{ .Address }}:{{ .Port }}"

@@ -211,9 +211,9 @@ resource "google_compute_target_pool" "servers" {
   name = "servers-pool"
 
   instances = [
-    "${var.region}/${var.name}-server-0",
-    "${var.region}/${var.name}-server-1",
-    "${var.region}/${var.name}-server-2"
+    "${var.zone}/${var.name}-server-0",
+    "${var.zone}/${var.name}-server-1",
+    "${var.zone}/${var.name}-server-2"
   ]
 
 }

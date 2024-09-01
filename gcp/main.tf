@@ -210,7 +210,11 @@ resource "google_compute_forwarding_rule" "servers_default" {
 resource "google_compute_target_pool" "servers" {
   name = "servers-pool"
 
-  instances = google_compute_instance.server.*.self_link
+  instances = [
+    "${var.region}/${var.name}-server-0",
+    "${var.region}/${var.name}-server-1",
+    "${var.region}/${var.name}-server-2"
+  ]
 
 }
 

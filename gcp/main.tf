@@ -125,7 +125,7 @@ resource "google_compute_instance" "server" {
     region                    = var.region
     cloud_env                 = "gce"
     retry_join                = var.retry_join
-    nomad_binary              = var.nomad_binary
+    lb_ip                     = google_compute_forwarding_rule.servers_default.ip_address
     nomad_consul_token_id     = random_uuid.consul_token[0].result
     nomad_consul_token_secret = random_uuid.consul_token[1].result
     nomad_license             = file("/root/license/license.nomad")

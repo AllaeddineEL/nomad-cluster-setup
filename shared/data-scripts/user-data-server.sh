@@ -8,7 +8,7 @@ exec > >(sudo tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 
 sudo echo "${nomad_license}" > /etc/nomad.d/license.hclic
 sudo echo "${consul_license}" > /etc/consul.d/license.hclic
 
-sudo bash /ops/shared/scripts/server.sh "${cloud_env}" "${server_count}" '${retry_join}' "${nomad_binary}"
+sudo bash /ops/shared/scripts/server.sh "${cloud_env}" "${server_count}" '${retry_join}' "${lb_ip}"
 
 
 ACL_DIRECTORY="/ops/shared/config"

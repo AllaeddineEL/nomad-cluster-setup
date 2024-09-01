@@ -24,5 +24,9 @@ consul {
 
 vault {
   enabled = true
-  address = "http://active.vault.service.consul:8200"
+  address = "http://vault.service.consul:8200"
+   default_identity {
+    aud = ["vault.io"]
+    ttl = "1h"
+  }
 }

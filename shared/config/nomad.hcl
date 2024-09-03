@@ -17,3 +17,12 @@ consul {
 acl {
   enabled = true
 }
+vault {
+  enabled = true
+  default_identity {
+    aud  = ["vault.io"]
+    env  = false
+    file = true
+    ttl  = "1h"
+  }
+}

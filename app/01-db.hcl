@@ -38,6 +38,7 @@ job "hashicups-db" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
+  namespace   = "data"
 
   group "db" {
     network {
@@ -59,14 +60,19 @@ job "hashicups-db" {
       meta {
         service = "database"
       }
+      vault {}
       config {
         image   = "hashicorpdemoapp/product-api-db:${var.product_api_db_version}"
         ports = ["db"]
       }
-      env {
-        POSTGRES_DB       = "products"
-        POSTGRES_USER     = "postgres"
-        POSTGRES_PASSWORD = "password"
+      template {
+        data        = <<EOF
+POSTGRES_DB=products        
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD={{with secret "kv/data/default/postgres/config"}}{{.Data.data.root_password}}{{end}}
+EOF
+        destination = "secrets/env"
+        env         = true
       }
     }
   }

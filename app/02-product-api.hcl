@@ -25,16 +25,6 @@ variable "postgres_db" {
   default = "products"
 }
 
-variable "postgres_user" {
-  description = "Postgres DB User"
-  default = "postgres"
-}
-
-variable "postgres_password" {
-  description = "Postgres DB Password"
-  default = "password"
-}
-
 variable "product_api_port" {
   description = "Product API Port"
   default = 9090
@@ -81,8 +71,8 @@ job "hashicups-product-api" {
       }
       template {
         data        = <<EOH
-{{ range service "database" }}
-DB_CONNECTION="host={{ .Address }} port={{ .Port }} user=${var.postgres_user} password=${var.postgres_password} dbname=${var.postgres_db} sslmode=disable"
+{{ range service "product-api-db" }}
+DB_CONNECTION="host={{ .Address }} port={{ .Port }} user={{with secret "database/creds/postgressql"}}{{.Data.username}}{{end}} password={{with secret "database/creds/postgressql"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
 BIND_ADDRESS = "{{ env "NOMAD_IP_product-api" }}:${var.product_api_port}"
 {{ end }}
 EOH

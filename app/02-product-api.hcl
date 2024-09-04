@@ -39,7 +39,10 @@ variable "product_api_port" {
   description = "Product API Port"
   default = 9090
 }
-
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "backend-team"
+}
 
 # Begin Job Spec
 
@@ -47,7 +50,7 @@ job "hashicups-product-api" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
-
+  namespace   = var.nomad_ns
 
   group "product-api" {
     network {
@@ -68,6 +71,9 @@ job "hashicups-product-api" {
       }
       meta {
         service = "product-api"
+      }
+       vault {
+        role = "postgressql-dynamic-secret"
       }
       config {
         image   = "hashicorpdemoapp/product-api:${var.product_api_version}"

@@ -30,7 +30,10 @@ variable "postgres_password" {
   default = "password"
 }
 
-
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "data-team"
+}
 
 # Begin Job Spec
 
@@ -38,7 +41,7 @@ job "hashicups-db" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
-  namespace   = "data"
+  namespace   = var.nomad_ns
 
   group "db" {
     network {
@@ -53,7 +56,7 @@ job "hashicups-db" {
       }
       driver = "docker"
       service {
-        name = "database"
+        name = "product-api-db"
         provider = "consul"
         port = "db"
       }
@@ -69,7 +72,7 @@ job "hashicups-db" {
         data        = <<EOF
 POSTGRES_DB=products        
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD={{with secret "kv/data/default/postgres/config"}}{{.Data.data.root_password}}{{end}}
+POSTGRES_PASSWORD={{with secret "kv/data/${var.nomad_ns}/hashicups-db/config"}}{{.Data.data.root_password}}{{end}}
 EOF
         destination = "secrets/env"
         env         = true

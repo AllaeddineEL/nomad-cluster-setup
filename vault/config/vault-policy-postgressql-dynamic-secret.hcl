@@ -1,3 +1,3 @@
-path "database/creds/postgressql" {
+path "database/creds/product-api-db-ro" {
   capabilities = ["read"]
 }

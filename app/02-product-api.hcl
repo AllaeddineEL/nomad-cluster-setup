@@ -36,7 +36,7 @@ variable "nomad_ns" {
 
 # Begin Job Spec
 
-job "hashicups-product-api" {
+job "product-api" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
@@ -72,7 +72,7 @@ job "hashicups-product-api" {
       template {
         data        = <<EOH
 {{ range service "product-api-db" }}
-DB_CONNECTION="host={{ .Address }} port={{ .Port }} user={{with secret "database/creds/postgressql"}}{{.Data.username}}{{end}} password={{with secret "database/creds/postgressql"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
+DB_CONNECTION="host={{ .Address }} port={{ .Port }} user={{with secret "database/creds/product-api-db-ro"}}{{.Data.username}}{{end}} password={{with secret "database/creds/product-api-db-ro"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
 BIND_ADDRESS = "{{ env "NOMAD_IP_product-api" }}:${var.product_api_port}"
 {{ end }}
 EOH

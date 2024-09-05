@@ -14,14 +14,17 @@ variable "nginx_port" {
   description = "Nginx Port"
   default = 80
 }
-
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "frontend-team"
+}
 # Begin Job Spec
 
-job "hashicups-nginx" {
+job "nginx-reverse-proxy" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
-
+  namespace = var.nomad_ns
   group "nginx" {
     network {
       port "nginx" {

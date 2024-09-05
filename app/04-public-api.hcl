@@ -19,14 +19,17 @@ variable "public_api_port" {
   description = "Public API Port"
   default = 8081
 }
-
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "backend-team"
+}
 # Begin Job Spec
 
-job "hashicups-public-api" {
+job "public-api" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
-
+  namespace   = var.nomad_ns
   group "public-api" {
     network {
       port "public-api" {

@@ -19,14 +19,18 @@ variable "payments_api_port" {
   description = "Payments API Port"
   default = 8080
 }
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "backend-team"
+}
 
 # Begin Job Spec
 
-job "hashicups-payments-api" {
+job "payments-api" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
-
+  namespace   = var.nomad_ns
 
   group "payments-api" {
     network {

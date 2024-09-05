@@ -19,14 +19,17 @@ variable "frontend_port" {
   description = "Frontend Port"
   default = 3000
 }
-
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "frontend-team"
+}
 # Begin Job Spec
 
-job "hashicups-frontend" {
+job "frontend" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
-
+  namespace = var.nomad_ns
 
   group "frontend" {
     network {

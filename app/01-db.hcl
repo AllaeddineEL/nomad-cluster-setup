@@ -37,7 +37,7 @@ variable "nomad_ns" {
 
 # Begin Job Spec
 
-job "hashicups-db" {
+job "product-api-db" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters

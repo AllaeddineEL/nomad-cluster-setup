@@ -45,7 +45,7 @@ job "product-api" {
   group "product-api" {
     network {
       port "product-api" {
-        static = var.product_api_port
+       # static = var.product_api_port
       }
     }
     task "product-api" {
@@ -73,7 +73,7 @@ job "product-api" {
         data        = <<EOH
 {{ range service "product-api-db" }}
 DB_CONNECTION="host={{ .Address }} port={{ .Port }} user={{with secret "database/creds/product-api-db-ro"}}{{.Data.username}}{{end}} password={{with secret "database/creds/product-api-db-ro"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
-BIND_ADDRESS = "{{ env "NOMAD_IP_product-api" }}:${var.product_api_port}"
+BIND_ADDRESS = "{{ env "NOMAD_ADDR_product-api" }}"
 {{ end }}
 EOH
         destination = "local/env.txt"

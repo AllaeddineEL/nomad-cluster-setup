@@ -34,7 +34,7 @@ job "frontend" {
   group "frontend" {
     network {
       port "frontend" {
-        static = var.frontend_port
+       # static = var.frontend_port
       }
     }
     task "frontend" {

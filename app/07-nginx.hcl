@@ -29,6 +29,7 @@ job "nginx-reverse-proxy" {
     network {
       port "nginx" {
         static = var.nginx_port
+        to = var.nginx_port
       }
     }
     task "nginx" {

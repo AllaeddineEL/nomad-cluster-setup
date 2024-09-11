@@ -33,7 +33,7 @@ job "public-api" {
   group "public-api" {
     network {
       port "public-api" {
-        static = var.public_api_port
+        #static = var.public_api_port
       }
     }
     task "public-api" {
@@ -53,7 +53,7 @@ job "public-api" {
       }
       template {
         data        = <<EOH
-BIND_ADDRESS = ":${var.public_api_port}"
+BIND_ADDRESS = ":{{ env NOMAD_PORT_public-api }}"
 {{ range service "product-api" }}
 PRODUCT_API_URI = "http://{{ .Address }}:{{ .Port }}"
 {{ end }}

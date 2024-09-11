@@ -35,7 +35,7 @@ job "payments-api" {
   group "payments-api" {
     network {
       port "payments-api" {
-        static = var.payments_api_port
+        #static = var.payments_api_port
       }
     }
     task "payments-api" {
@@ -62,7 +62,7 @@ job "payments-api" {
         }
       }
       template {
-        data = "server.port=${var.payments_api_port}"
+        data = "server.port={{ env NOMAD_PORT_payments-api }}"
         destination = "local/application.properties"
       }
     }

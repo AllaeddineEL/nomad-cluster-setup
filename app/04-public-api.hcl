@@ -53,7 +53,7 @@ job "public-api" {
       }
       template {
         data        = <<EOH
-BIND_ADDRESS = ":{{ env NOMAD_PORT_public-api }}"
+BIND_ADDRESS = ":{{ env "NOMAD_PORT_public-api" }}"
 {{ range service "product-api" }}
 PRODUCT_API_URI = "http://{{ .Address }}:{{ .Port }}"
 {{ end }}

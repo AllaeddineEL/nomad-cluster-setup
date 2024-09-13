@@ -46,6 +46,7 @@ job "nginx-reverse-proxy" {
       config {
         image = "nginx:alpine"
         ports = ["nginx"]
+        network_mode = "host"
         mount {
           type   = "bind"
           source = "local/default.conf"

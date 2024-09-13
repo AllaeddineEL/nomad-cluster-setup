@@ -46,7 +46,7 @@ job "product-api-db" {
   group "db" {
     network {
       port "db" {
-       # static = 5432
+       static = 5432
       }
     }
     task "db" {
@@ -72,7 +72,7 @@ job "product-api-db" {
         data        = <<EOF
 POSTGRES_DB=products        
 POSTGRES_USER=postgres
-POSTGRES_PASSWORD={{with secret "kv/data/${var.nomad_ns}/{{NOMAD_JOB_NAME}}/config"}}{{.Data.data.root_password}}{{end}}
+POSTGRES_PASSWORD={{with secret "kv/data/${var.nomad_ns}/product-api-db/config"}}{{.Data.data.root_password}}{{end}}
 EOF
         destination = "secrets/env"
         env         = true

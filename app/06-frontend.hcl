@@ -12,13 +12,9 @@ variable "region" {
 
 variable "frontend_version" {
   description = "Docker version tag"
-  default = "v1.0.4"
+  default = "v1.0.3"
 }
 
-variable "frontend_port" {
-  description = "Frontend Port"
-  default = 3000
-}
 variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
   default = "frontend-team"
@@ -52,7 +48,6 @@ job "frontend" {
         data        = <<EOH
 {{ range service "public-api" }}
 NEXT_PUBLIC_PUBLIC_API_URL="http://{{ .Address }}:{{ .Port }}"
-NEXT_PUBLIC_FOOTER_FLAG="{{ env "NOMAD_ALLOC_NAME" }}"
 {{ end }}
 PORT="{{ env "NOMAD_PORT_frontend" }}"
 EOH

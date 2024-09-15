@@ -12,12 +12,7 @@ variable "region" {
 
 variable "public_api_version" {
   description = "Docker version tag"
-  default = "v0.0.7"
-}
-
-variable "public_api_port" {
-  description = "Public API Port"
-  default = 8081
+  default = "v0.0.6"
 }
 variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"

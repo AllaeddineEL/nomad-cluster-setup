@@ -10,14 +10,9 @@ variable "region" {
   default     = "global"
 }
 
-variable "public_api_version" {
-  description = "Docker version tag"
-  default = "v0.0.7"
-}
-
 variable "product_api_version" {
   description = "Docker version tag"
-  default = "v0.0.21"
+  default = "v0.0.20"
 }
 
 variable "postgres_db" {
@@ -25,10 +20,6 @@ variable "postgres_db" {
   default = "products"
 }
 
-variable "product_api_port" {
-  description = "Product API Port"
-  default = 9090
-}
 variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
   default = "backend-team"
@@ -45,7 +36,6 @@ job "product-api" {
   group "product-api" {
     network {
       port "product-api" {
-       # static = var.product_api_port
       }
     }
     task "product-api" {

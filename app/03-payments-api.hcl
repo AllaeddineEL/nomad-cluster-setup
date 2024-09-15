@@ -15,10 +15,6 @@ variable "payments_version" {
   default = "v0.0.12"
 }
 
-variable "payments_api_port" {
-  description = "Payments API Port"
-  default = 8080
-}
 variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
   default = "backend-team"
@@ -63,7 +59,7 @@ job "payments-api" {
       }
       template {
         data = <<EOH
-        server.port={{ env "NOMAD_PORT_payments_api" }}
+server.port={{ env "NOMAD_PORT_payments_api" }}
 EOH
         destination = "local/application.properties"
       }

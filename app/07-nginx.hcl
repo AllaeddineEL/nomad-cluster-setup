@@ -27,6 +27,7 @@ job "nginx-reverse-proxy" {
   namespace = var.nomad_ns
   group "nginx" {
     network {
+      mode = "host"
       port "nginx" {
         static = var.nginx_port
         to = var.nginx_port

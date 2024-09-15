@@ -73,7 +73,7 @@ job "product-api" {
         data        = <<EOH
 {{ range service "product-api-db" }}
 DB_CONNECTION="host={{ .Address }} port={{ .Port }} user={{with secret "database/creds/product-api-db-ro"}}{{.Data.username}}{{end}} password={{with secret "database/creds/product-api-db-ro"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
-BIND_ADDRESS = "{{ env "NOMAD_IP_product-api" }}:{{ env "NOMAD_PORT_product-api" }}"
+BIND_ADDRESS = "0.0.0.0:{{ env "NOMAD_PORT_product_api" }}"
 {{ end }}
 EOH
         destination = "local/env.txt"

@@ -63,7 +63,7 @@ job "payments-api" {
       }
       template {
         data = <<EOH
-        server.port={{ env "NOMAD_PORT_payments-api" }}
+        server.port={{ env "NOMAD_PORT_payments_api" }}
 EOH
         destination = "local/application.properties"
       }

@@ -21,6 +21,9 @@ CONFIGURATION
 output "clients_lb" {
   value = google_compute_forwarding_rule.clients_default.ip_address
 }
+output "clients_lb_address" {
+  value = "http://${google_compute_forwarding_rule.clients_default.ip_address}"
+}
 
 output "gcp_project" {
   value = var.project

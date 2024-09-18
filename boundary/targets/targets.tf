@@ -29,7 +29,7 @@ data "vault_policy_document" "boundary-token-policy" {
 # Create Policy to read Dynamic DB secrets
 data "vault_policy_document" "db-secrets" {
   rule {
-    path         = "${vault_database_secrets_mount.postgres.path}/creds/db1"
+    path         = "database/creds/product-api-db-ro"
     capabilities = ["read"]
   }
 }

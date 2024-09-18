@@ -1,14 +1,14 @@
 resource "random_uuid" "worker_uuid" {}
 
 resource "boundary_worker" "hcp_pki_worker" {
-  scope_id                    = "global"
-  name                        = "boundary-worker-${random_uuid.worker_uuid.result}"
-  worker_generated_auth_token = ""
+  scope_id    = "global"
+  name        = "boundary-worker-${random_uuid.worker_uuid.result}"
+  description = "self managed worker running as a Nomad job"
 }
 
 locals {
   boundary_worker_config = <<-WORKER_CONFIG
-    hcp_boundary_cluster_id = "${split(".", split("//", data.terraform_remote_state.boundary_demo_init.outputs.boundary_url)[1])[0]}"
+    hcp_boundary_cluster_id = "${split(".", split("//", data.terraform_remote_state.boundary_cluster.outputs.boundary_url)[1])[0]}"
     listener "tcp" {
       purpose = "proxy"
       address = "0.0.0.0"
@@ -70,7 +70,9 @@ job "boundary-worker" {
       }
 
       template {
-        data        = ${local.boundary_worker_config}
+        data        = <<EOH
+        ${local.boundary_worker_config}
+        EOH
         destination = "tmp/config.hcl"
       }
 

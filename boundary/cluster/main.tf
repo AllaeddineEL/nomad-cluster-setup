@@ -12,7 +12,7 @@ resource "hcp_project" "project" {
 }
 
 #Create HCP Boundary Cluster
-resource "hcp_boundary_cluster" "boundary-demo" {
+resource "hcp_boundary_cluster" "boundary" {
   project_id = hcp_project.project.resource_id
   cluster_id = "instruqt-${random_pet.pet_name.id}"
   username   = "admin"

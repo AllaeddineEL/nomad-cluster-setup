@@ -5,7 +5,7 @@ output "boundary_admin_password" {
 
 output "boundary_url" {
   description = "The public URL of the HCP Boundary Cluster"
-  value       = hcp_boundary_cluster.boundary-demo.cluster_url
+  value       = hcp_boundary_cluster.boundary.cluster_url
 }
 
 output "boundary_admin_auth_method" {

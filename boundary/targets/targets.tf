@@ -97,11 +97,13 @@ resource "boundary_target" "dev-db-target" {
 
 # Create Dev Vault Credential store
 resource "boundary_credential_store_vault" "dev_vault" {
-  name        = "dev_vault"
-  description = "Dev Vault Credential Store"
-  address     = "vault.service.consul"
-  token       = vault_token.boundary-token-dev.client_token
-  scope_id    = boundary_scope.dev_project.id
+  depends_on      = [nomad_job.boundary_worker]
+  name            = "dev_vault"
+  description     = "Dev Vault Credential Store"
+  address         = data.terraform_remote_state.vault_cluster.outputs.vault_url #"http://vault.service.consul:8200"
+  tls_skip_verify = true
+  token           = vault_token.boundary-token-dev.client_token
+  scope_id        = boundary_scope.dev_project.id
 }
 
 # Create Database Credential Library
@@ -109,7 +111,7 @@ resource "boundary_credential_library_vault" "database" {
   name                = "database"
   description         = "Postgres DB Credential Library"
   credential_store_id = boundary_credential_store_vault.dev_vault.id
-  path                = "database/creds/db1" # change to Vault backend path
+  path                = "database/creds/product-api-db-ro" # change to Vault backend path
   http_method         = "GET"
   credential_type     = "username_password"
 }

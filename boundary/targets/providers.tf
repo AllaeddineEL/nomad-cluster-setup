@@ -5,6 +5,13 @@ data "terraform_remote_state" "boundary_cluster" {
     path = "../cluster/terraform.tfstate"
   }
 }
+data "terraform_remote_state" "vault_cluster" {
+  backend = "local"
+
+  config = {
+    path = "../vault/terraform.tfstate"
+  }
+}
 terraform {
   required_version = ">= 1.0"
   required_providers {

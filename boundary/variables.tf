@@ -8,3 +8,6 @@ variable "region" {
   default     = "europe-west1"
   description = "The GCP region"
 }
+variable "boundary_version" {
+  default = "0.17.1"
+}

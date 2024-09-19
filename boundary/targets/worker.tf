@@ -9,7 +9,7 @@ resource "boundary_worker" "hcp_pki_worker" {
 
 locals {
   boundary_worker_config = <<-WORKER_CONFIG
-    hcp_boundary_cluster_id = "${split(".", split("//", hcp_boundary_cluster.boundary.cluster_url)[1])[0]}"
+    hcp_boundary_cluster_id = "${split(".", split("//", data.terraform_remote_state.boundary_cluster.outputs.boundary_url)[1])[0]}"
     listener "tcp" {
       purpose = "proxy"
       address = "0.0.0.0"
@@ -60,9 +60,6 @@ job "boundary-worker" {
       config {
         command = "/tmp/boundary"
         args = ["server", "-config=tmp/config.hcl"]
-        ports = [
-          "worker"
-        ]
       }
 
       artifact {

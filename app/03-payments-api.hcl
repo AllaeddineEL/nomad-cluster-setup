@@ -57,6 +57,10 @@ job "payments-api" {
           target = "/application.properties"
         }
       }
+      resources {
+        cpu    = 500
+        memory = 500
+      }
       template {
         data = <<EOH
 server.port={{ env "NOMAD_PORT_payments_api" }}

@@ -9,7 +9,7 @@ data "terraform_remote_state" "vault_cluster" {
   backend = "local"
 
   config = {
-    path = "../vault/terraform.tfstate"
+    path = "../../vault/terraform.tfstate"
   }
 }
 terraform {

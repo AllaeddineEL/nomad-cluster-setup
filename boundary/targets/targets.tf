@@ -86,7 +86,7 @@ resource "boundary_target" "dev-db-target" {
   description              = "Connect to the postgres database with Vault DB secrets engine credentials"
   scope_id                 = boundary_scope.dev_project.id
   session_connection_limit = -1
-  default_port             = 30932
+  default_port             = 5432
   address                  = "product-api-db.service.consul"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 
@@ -97,13 +97,13 @@ resource "boundary_target" "dev-db-target" {
 
 # Create Dev Vault Credential store
 resource "boundary_credential_store_vault" "dev_vault" {
-  depends_on      = [nomad_job.boundary_worker]
-  name            = "dev_vault"
-  description     = "Dev Vault Credential Store"
-  address         = data.terraform_remote_state.vault_cluster.outputs.vault_url #"http://vault.service.consul:8200"
-  tls_skip_verify = true
-  token           = vault_token.boundary-token-dev.client_token
-  scope_id        = boundary_scope.dev_project.id
+  depends_on    = [nomad_job.boundary_worker]
+  name          = "dev_vault"
+  description   = "Dev Vault Credential Store"
+  address       = "http://vault.service.consul:8200"
+  token         = vault_token.boundary-token-dev.client_token
+  scope_id      = boundary_scope.dev_project.id
+  worker_filter = "\"${var.region}\" in \"/tags/region\""
 }
 
 # Create Database Credential Library
@@ -114,4 +114,15 @@ resource "boundary_credential_library_vault" "database" {
   path                = "database/creds/product-api-db-ro" # change to Vault backend path
   http_method         = "GET"
   credential_type     = "username_password"
+}
+
+resource "boundary_target" "hashicups" {
+  type                     = "tcp"
+  name                     = "hashicups"
+  description              = "Connect to the HashiCups Demo App"
+  scope_id                 = boundary_scope.dev_project.id
+  session_connection_limit = -1
+  default_port             = 80
+  address                  = "nginx.service.consul"
+  egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }

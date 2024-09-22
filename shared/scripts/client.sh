@@ -15,7 +15,7 @@ sleep 15
 DOCKER_BRIDGE_IP_ADDRESS=(`ip -brief addr show docker0 | awk '{print $3}' | awk -F/ '{print $1}'`)
 CLOUD=$1
 RETRY_JOIN=$2
-NOMAD_BINARY=$3
+
 
 # Get IP from metadata service
 case $CLOUD in
@@ -42,16 +42,6 @@ sed -i "s/RETRY_JOIN/$RETRY_JOIN/g" $CONFIGDIR/consul_client.hcl
 sudo cp $CONFIGDIR/consul_client.hcl $CONSULCONFIGDIR/consul.hcl
 
 sudo systemctl enable consul.service
-
-# Nomad
-
-## Replace existing Nomad binary if remote file exists
-if [[ `wget -S --spider $NOMAD_BINARY  2>&1 | grep 'HTTP/1.1 200 OK'` ]]; then
-  curl -L $NOMAD_BINARY > nomad.zip
-  sudo unzip -o nomad.zip -d /usr/local/bin
-  sudo chmod 0755 /usr/local/bin/nomad
-  sudo chown root:root /usr/local/bin/nomad
-fi
 
 sudo cp $CONFIGDIR/nomad_client.hcl $NOMADCONFIGDIR/nomad.hcl
 

@@ -197,7 +197,6 @@ resource "google_compute_instance" "client" {
     region                    = var.region
     cloud_env                 = "gce"
     retry_join                = var.retry_join
-    nomad_binary              = var.nomad_binary
     nomad_consul_token_secret = random_uuid.consul_token.1.result
   })
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 CONFIGDIR=/ops/shared/config
 
@@ -64,6 +64,7 @@ sudo mkdir -p /opt/cni/bin && sudo mkdir -p /opt/cni/config && \
 sudo tar -C /opt/cni/bin -xzf cni-plugins.tgz && sudo  ln -s /usr/lib/cni /opt/cni/bin
 sudo cp $CONFIGDIR/cni.conflist /opt/cni/config/cni.conflist
 sudo modprobe bridge
+sudo modprobe br_netfilter
 
 sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-arptables
 sudo echo 1 > /proc/sys/net/bridge/bridge-nf-call-ip6tables

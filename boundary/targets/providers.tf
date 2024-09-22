@@ -23,6 +23,10 @@ terraform {
       source  = "hashicorp/boundary"
       version = "1.1.15"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "0.12.1"
+    }
   }
 }
 

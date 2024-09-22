@@ -30,8 +30,13 @@ resource "nomad_namespace" "boundary" {
   name        = "boundary"
   description = "Boundary worker namespace"
 }
+resource "time_sleep" "wait_10_seconds" {
+  depends_on = [boundary_worker.hcp_pki_worker]
 
+  create_duration = "10s"
+}
 resource "nomad_job" "boundary_worker" {
+  depends_on       = [time_sleep.wait_10_seconds]
   purge_on_destroy = true
   jobspec          = <<EOT
 job "boundary-worker" {

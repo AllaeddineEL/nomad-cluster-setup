@@ -97,7 +97,7 @@ resource "boundary_target" "dev-db-target" {
 
 # Create Dev Vault Credential store
 resource "boundary_credential_store_vault" "dev_vault" {
-  depends_on    = [nomad_job.boundary_worker]
+  depends_on    = [time_sleep.wait_40_seconds]
   name          = "dev_vault"
   description   = "Dev Vault Credential Store"
   address       = "http://vault.service.consul:8200"

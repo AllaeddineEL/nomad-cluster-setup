@@ -91,3 +91,9 @@ job "boundary-worker" {
 }  
 EOT
 }
+
+resource "time_sleep" "wait_40_seconds" {
+  depends_on = [nomad_job.boundary_worker]
+
+  create_duration = "40s"
+}

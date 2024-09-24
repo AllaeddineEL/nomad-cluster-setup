@@ -12,7 +12,7 @@ variable "region" {
 
 variable "payments_version" {
   description = "Docker version tag"
-  default = "v0.0.12"
+  default = "v0.0.16"
 }
 
 variable "nomad_ns" {

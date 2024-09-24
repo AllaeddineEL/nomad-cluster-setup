@@ -10,11 +10,10 @@ variable "region" {
   default     = "global"
 }
 
-variable "frontend_version" {
-  description = "Docker version tag"
-  default = "v1.0.3"
+variable "nginx_port" {
+  description = "Nginx Port"
+  default = 3000
 }
-
 variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
   default = "frontend-team"
@@ -26,11 +25,12 @@ job "frontend" {
   region = var.region
   datacenters = var.datacenters
   namespace = var.nomad_ns
-
   group "frontend" {
     network {
+      mode = "host"
       port "frontend" {
-       # static = var.frontend_port
+        static = var.nginx_port
+        to = var.nginx_port
       }
     }
     task "frontend" {
@@ -39,26 +39,53 @@ job "frontend" {
         name = "frontend"
         provider = "consul"
         port = "frontend"
-       # address  = attr.unique.platform.aws.public-ipv4
+     #   address  = attr.unique.platform.aws.public-hostname
       }
       meta {
         service = "frontend"
       }
-      template {
-        data        = <<EOH
-{{ range service "public-api" }}
-NEXT_PUBLIC_PUBLIC_API_URL="http://{{ .Address }}:{{ .Port }}"
-{{ end }}
-PORT="{{ env "NOMAD_PORT_frontend" }}"
-EOH
-        destination = "local/env.txt"
-        env         = true
-      }
       config {
-        image   = "hashicorpdemoapp/frontend:${var.frontend_version}"
+        image = "hashicorpdemoapp/frontend-nginx:v1.0.9"
         ports = ["frontend"]
+        network_mode = "host"
+        mount {
+          type   = "bind"
+          source = "local/default.conf"
+          target = "/etc/nginx/conf.d/default.conf"
+        }
+      }
+      env {
+          NEXT_PUBLIC_FOOTER_FLAG = "HashiCups-v1"
+          NEXT_PUBLIC_PUBLIC_API_URL="/"
+      }
+      template {
+        data =  <<EOF
+server {
+  listen {{ env "NOMAD_PORT_frontend" }};
+  server_name localhost;
+  server_tokens off;
+  gzip on;
+  gzip_proxied any;
+  gzip_comp_level 4;
+  gzip_types text/css application/javascript image/svg+xml;
+  proxy_http_version 1.1;
+  proxy_set_header Upgrade $http_upgrade;
+  proxy_set_header Connection 'upgrade';
+  proxy_set_header Host $host;
+  proxy_cache_bypass $http_upgrade;
+  location / {
+    root   /usr/share/nginx/html;
+    index  index.html index.htm;
+  }
+  location /api {
+    {{ range service "public-api" }}
+      proxy_pass http://{{ .Address }}:{{ .Port }};
+    {{ end }}
+  }
+}
+        EOF
+        destination = "local/default.conf"
       }
     }
   }
-
 }

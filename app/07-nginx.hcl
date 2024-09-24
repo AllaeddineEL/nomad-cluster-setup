@@ -50,55 +50,58 @@ job "nginx-reverse-proxy" {
         network_mode = "host"
         mount {
           type   = "bind"
-          source = "local/default.conf"
-          target = "/etc/nginx/conf.d/default.conf"
+          source = "local/nginx.conf"
+          target = "/etc/nginx/conf.d/nginx.conf"
         }
       }
       template {
         data =  <<EOF
-proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=STATIC:10m inactive=7d use_temp_path=off;
-upstream frontend_upstream {
-  {{ range service "frontend" }}
-    server {{ .Address }}:{{ .Port }};{{- end }}
-}
-server {
-  listen {{ env "NOMAD_PORT_nginx" }};
-  server_name {{ env "NOMAD_IP_nginx" }};
-  server_tokens off;
-  gzip on;
-  gzip_proxied any;
-  gzip_comp_level 4;
-  gzip_types text/css application/javascript image/svg+xml;
-  proxy_http_version 1.1;
-  proxy_set_header Upgrade $http_upgrade;
-  proxy_set_header Connection 'upgrade';
-  proxy_set_header Host $host;
-  proxy_cache_bypass $http_upgrade;
-  location /_next/static {
-    proxy_cache STATIC;
-    proxy_pass http://frontend_upstream;
-    # For testing cache - remove before deploying to production
-    add_header X-Cache-Status $upstream_cache_status;
-  }
-  location /static {
-    proxy_cache STATIC;
-    proxy_ignore_headers Cache-Control;
-    proxy_cache_valid 60m;
-    proxy_pass http://frontend_upstream;
-    # For testing cache - remove before deploying to production
-    add_header X-Cache-Status $upstream_cache_status;
-  }
-  location / {
-    proxy_pass http://frontend_upstream;
-  }
-  location /api {
-    {{ range service "public-api" }}
-      proxy_pass http://{{ .Address }}:{{ .Port }};
-    {{ end }}
-  }
-}
+          server {
+            server_name localhost;
+            listen 80 default_server;
+
+            proxy_http_version 1.1;
+
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+            proxy_temp_file_write_size 64k;
+            proxy_connect_timeout 10080s;
+            proxy_send_timeout 10080;
+            proxy_read_timeout 10080;
+            proxy_buffer_size 64k;
+            proxy_buffers 16 32k;
+            proxy_busy_buffers_size 64k;
+            proxy_redirect off;
+            proxy_request_buffering off;
+            proxy_buffering off;
+
+            location / {
+            {{ range service "frontend" }}
+              proxy_pass http://{{ .Address }}:{{ .Port }};{{- end }}
+            }
+
+            location /static {
+              proxy_cache_valid 60m;
+              {{ range service "frontend" }}
+              proxy_pass http://{{ .Address }}:{{ .Port }};{{- end }}
+            }
+
+            location /api {
+              {{ range service "public-api" }}
+              proxy_pass http://{{ .Address }}:{{ .Port }};
+              {{ end }}
+            }
+
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+              root   /usr/share/nginx/html;
+            }
+          }
         EOF
-        destination = "local/default.conf"
+        destination = "local/nginx.conf"
       }
     }
   }

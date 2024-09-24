@@ -1,9 +1,3 @@
-variable "datacenters" {
-  description = "A list of datacenters in the region which are eligible for task placement."
-  type        = list(string)
-  default     = ["dc1"]
-}
-
 variable "region" {
   description = "The region where the job should be placed."
   type        = string
@@ -12,7 +6,7 @@ variable "region" {
 
 variable "product_api_db_version" {
   description = "Docker version tag"
-  default = "v0.0.20"
+  default = "v0.0.22"
 }
 
 variable "postgres_db" {

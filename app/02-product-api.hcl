@@ -12,7 +12,7 @@ variable "region" {
 
 variable "product_api_version" {
   description = "Docker version tag"
-  default = "v0.0.20"
+  default = "v0.0.22"
 }
 
 variable "postgres_db" {

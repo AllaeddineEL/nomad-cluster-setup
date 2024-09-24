@@ -1,3 +1,8 @@
+variable "datacenters" {
+  description = "A list of datacenters in the region which are eligible for task placement."
+  type        = list(string)
+  default     = ["dc1"]
+}
 variable "region" {
   description = "The region where the job should be placed."
   type        = string

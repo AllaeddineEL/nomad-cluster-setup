@@ -31,7 +31,6 @@ job "payments-api" {
   group "payments-api" {
     network {
       port "payments-api" {
-        #static = var.payments_api_port
       }
     }
     task "payments-api" {

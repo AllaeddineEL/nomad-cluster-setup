@@ -28,7 +28,6 @@ job "public-api" {
   group "public-api" {
     network {
       port "public-api" {
-        #static = var.public_api_port
       }
     }
     task "public-api" {
@@ -37,7 +36,6 @@ job "public-api" {
         name = "public-api"
         provider = "consul"
         port = "public-api"
-      #  address  = attr.unique.platform.aws.public-ipv4
       }
       meta {
         service = "public-api"

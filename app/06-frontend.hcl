@@ -9,11 +9,6 @@ variable "region" {
   type        = string
   default     = "global"
 }
-
-variable "nginx_port" {
-  description = "Nginx Port"
-  default = 3000
-}
 variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
   default = "frontend-team"
@@ -27,10 +22,7 @@ job "frontend" {
   namespace = var.nomad_ns
   group "frontend" {
     network {
-      mode = "host"
       port "frontend" {
-        static = var.nginx_port
-        to = var.nginx_port
       }
     }
     task "frontend" {
@@ -39,7 +31,6 @@ job "frontend" {
         name = "frontend"
         provider = "consul"
         port = "frontend"
-     #   address  = attr.unique.platform.aws.public-hostname
       }
       meta {
         service = "frontend"
@@ -47,7 +38,6 @@ job "frontend" {
       config {
         image = "hashicorpdemoapp/frontend-nginx:v1.0.9"
         ports = ["frontend"]
-        network_mode = "host"
         mount {
           type   = "bind"
           source = "local/default.conf"

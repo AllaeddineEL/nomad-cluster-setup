@@ -39,7 +39,6 @@ job "nginx-reverse-proxy" {
         name = "nginx"
         provider = "consul"
         port = "nginx"
-     #   address  = attr.unique.platform.aws.public-hostname
       }
       meta {
         service = "nginx-reverse-proxy"

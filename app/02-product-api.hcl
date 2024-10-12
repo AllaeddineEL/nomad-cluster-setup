@@ -62,7 +62,7 @@ job "product-api" {
       template {
         data        = <<EOH
 {{ range service "product-api-db" }}
-DB_CONNECTION="host={{ .Address }} port={{ .Port }} user={{with secret "database/creds/product-api-db-ro"}}{{.Data.username}}{{end}} password={{with secret "database/creds/product-api-db-ro"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
+DB_CONNECTION="host={{ .Address }} port={{ .Port }} user={{with secret "database/creds/product-api-db-owner"}}{{.Data.username}}{{end}} password={{with secret "database/creds/product-api-db-owner"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
 BIND_ADDRESS = "0.0.0.0:{{ env "NOMAD_PORT_product_api" }}"
 {{ end }}
 EOH

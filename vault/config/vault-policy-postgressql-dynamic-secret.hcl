@@ -1,3 +1,3 @@
-path "database/creds/product-api-db-ro" {
+path "database/creds/product-api-db-owner" {
   capabilities = ["read"]
 }

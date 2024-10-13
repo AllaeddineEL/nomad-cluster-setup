@@ -111,7 +111,7 @@ resource "boundary_credential_library_vault" "database" {
   name                = "database"
   description         = "Postgres DB Credential Library"
   credential_store_id = boundary_credential_store_vault.dev_vault.id
-  path                = "database/creds/product-api-db-ro" # change to Vault backend path
+  path                = "database/creds/product-api-db-owner" # change to Vault backend path
   http_method         = "GET"
   credential_type     = "username_password"
 }

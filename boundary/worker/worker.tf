@@ -60,7 +60,7 @@ job "boundary-worker" {
     }
 
     task "worker" {
-      driver = "raw_exec"
+      driver = "exec2"
 
       config {
         command = "/tmp/boundary"

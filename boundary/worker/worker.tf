@@ -65,6 +65,7 @@ job "boundary-worker" {
       config {
         command = "/tmp/boundary"
         args = ["server", "-config=tmp/config.hcl"]
+        unveil  = ["rwc:/tmp"]
       }
 
       artifact {

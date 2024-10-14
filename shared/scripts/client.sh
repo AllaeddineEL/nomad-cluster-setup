@@ -8,6 +8,7 @@ CONSULCONFIGDIR=/etc/consul.d
 NOMADCONFIGDIR=/etc/nomad.d
 CONSULTEMPLATECONFIGDIR=/etc/consul-template.d
 HOME_DIR=ubuntu
+NOMAD_DRIVER_EXEC2_VER=0.1.0-beta.2
 
 # Wait for network
 sleep 15
@@ -44,6 +45,15 @@ sudo cp $CONFIGDIR/consul_client.hcl $CONSULCONFIGDIR/consul.hcl
 sudo systemctl enable consul.service
 
 sudo cp $CONFIGDIR/nomad_client.hcl $NOMADCONFIGDIR/nomad.hcl
+
+# Install the Nomad exec2 driver.
+
+sudo mkdir -p /opt/nomad/data/plugins
+sudo chmod 755 /opt/nomad/data/plugins
+curl -OL https://releases.hashicorp.com/nomad-driver-exec2/${NOMAD_DRIVER_EXEC2_VER}/nomad-driver-exec2_${NOMAD_DRIVER_EXEC2_VER}_linux_amd64.zip
+unzip nomad-driver-exec2_${NOMAD_DRIVER_EXEC2_VER}_linux_amd64.zip
+chmod +x nomad-driver-exec2 && sudo mv nomad-driver-exec2 /opt/nomad/data/plugins/
+rm LICENSE.txt nomad-driver-exec2_${NOMAD_DRIVER_EXEC2_VER}_linux_amd64.zip
 
 # Install and link CNI Plugins to support Consul Connect-Enabled jobs
 

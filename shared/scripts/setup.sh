@@ -76,5 +76,4 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt-get update && sudo apt-get -y install \
 	consul-enterprise=$CONSULVERSION* \
 	nomad-enterprise=$NOMADVERSION* \
-	consul-template=$CONSULTEMPLATEVERSION* \
-  nomad-driver-exec2
+	consul-template=$CONSULTEMPLATEVERSION*

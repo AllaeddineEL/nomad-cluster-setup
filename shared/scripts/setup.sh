@@ -10,8 +10,8 @@ cd /ops
 CONFIGDIR=/ops/shared/config
 
 CONSULVERSION=1.19.2+ent
-NOMADVERSION=1.8.4+ent
-CONSULTEMPLATEVERSION=0.37.5
+NOMADVERSION=1.9.0+ent
+CONSULTEMPLATEVERSION=0.39.1
 
 CONSULTEMPLATECONFIGDIR=/etc/consul-template.d
 CONSULTEMPLATEDIR=/opt/consul-template
@@ -36,7 +36,7 @@ case $CLOUD_ENV in
 esac
 sudo gpg --refresh-keys
 sudo add-apt-repository universe && sudo apt-get update
-sudo apt-get install -y unzip tree redis-tools jq curl tmux
+sudo apt-get install -y unzip tree jq curl tmux wget gpg coreutils
 sudo apt-get clean
 
 
@@ -76,4 +76,5 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt-get update && sudo apt-get -y install \
 	consul-enterprise=$CONSULVERSION* \
 	nomad-enterprise=$NOMADVERSION* \
-	consul-template=$CONSULTEMPLATEVERSION*
+	consul-template=$CONSULTEMPLATEVERSION* \
+  nomad-driver-exec2

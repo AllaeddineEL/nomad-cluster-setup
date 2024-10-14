@@ -1,7 +1,7 @@
 
 ##### Dev Org Resources #####
 
-# Create Organization Scope for Dev
+# Create Organization Scope for Securirty Team
 resource "boundary_scope" "sec_org" {
   scope_id                 = "global"
   name                     = "sec_ops_org"
@@ -10,7 +10,7 @@ resource "boundary_scope" "sec_org" {
   auto_create_admin_role   = true
 }
 
-# Create Project for Dev AWS resources
+# Create Project for the shared services resources
 resource "boundary_scope" "shared_svc_project" {
   name                     = "shared_svc_project"
   description              = "Shared services Project"

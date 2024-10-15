@@ -9,15 +9,16 @@ resource "boundary_worker" "hcp_pki_worker" {
 
 locals {
   boundary_worker_config = <<-WORKER_CONFIG
+    disable_mlock = true
     hcp_boundary_cluster_id = "${split(".", split("//", data.terraform_remote_state.boundary_cluster.outputs.boundary_url)[1])[0]}"
     listener "tcp" {
       purpose = "proxy"
       address = "0.0.0.0"
     }
     worker {
-      auth_storage_path = "/boundary/boundary-worker-${random_uuid.worker_uuid.result}"
+      auth_storage_path = "{{ env "NOMAD_ALLOC_DIR" }}/boundary/boundary-worker-${random_uuid.worker_uuid.result}"
       controller_generated_activation_token = "${boundary_worker.hcp_pki_worker.controller_generated_activation_token}"
-      recording_storage_path="/boundary/storage/"
+      recording_storage_path="{{ env "NOMAD_ALLOC_DIR" }}/boundary/storage/"
       tags {
         type = "public_instance"
         cloud = "gcp"
@@ -63,14 +64,13 @@ job "boundary-worker" {
       driver = "exec2"
 
       config {
-        command = "/tmp/boundary"
+        command = "tmp/boundary"
         args = ["server", "-config=tmp/config.hcl"]
-        unveil  = ["rwc:/tmp"]
       }
 
       artifact {
         source      = "https://releases.hashicorp.com/boundary/${var.boundary_version}+ent/boundary_${var.boundary_version}+ent_linux_amd64.zip"
-        destination = "./tmp/"
+        destination = "tmp/"
       }
 
       template {

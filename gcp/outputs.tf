@@ -5,14 +5,6 @@ output "lb_address_consul_nomad" {
 output "consul_bootstrap_token_secret" {
   value = random_uuid.consul_token[1].result
 }
-
-output "clients_lb" {
-  value = google_compute_forwarding_rule.clients_default.ip_address
-}
-output "clients_lb_address" {
-  value = "http://${google_compute_forwarding_rule.clients_default.ip_address}"
-}
-
 output "gcp_project" {
   value = var.project
 }

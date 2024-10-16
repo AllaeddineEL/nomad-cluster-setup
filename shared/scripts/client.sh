@@ -8,7 +8,7 @@ CONSULCONFIGDIR=/etc/consul.d
 NOMADCONFIGDIR=/etc/nomad.d
 CONSULTEMPLATECONFIGDIR=/etc/consul-template.d
 HOME_DIR=ubuntu
-NOMAD_DRIVER_EXEC2_VER=0.1.0-beta.2
+NOMAD_DRIVER_EXEC2_VER=0.1.0
 
 # Wait for network
 sleep 15

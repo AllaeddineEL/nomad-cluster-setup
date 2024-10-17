@@ -23,7 +23,7 @@ case $CLOUD_ENV in
     ;;
 
   gce)
-    sudo apt-get update && sudo apt-get install -y software-properties-common
+    sudo apt update && sudo apt install -y software-properties-common
     ;;
 
   azure)

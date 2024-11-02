@@ -22,7 +22,7 @@ variable "zone" {
 source "googlecompute" "hashistack" {
   image_name   = "hashistack-${local.timestamp}"
   project_id   = var.project
-  source_image = "ubuntu-minimal-2204-jammy-v20231213b"
+  source_image = "ubuntu-minimal-2404-noble-amd64-v20241004"
   ssh_username = "packer"
   zone         = var.zone
 }

@@ -23,8 +23,8 @@ CONSULTEMPLATE_CONFIG_DIR=/etc/consul-template.d
 
 HOME_DIR=ubuntu
 
-sudo echo "${nomad_license}" > $CONSUL_CONFIG_DIR/license.hclic
-sudo echo "${consul_license}" > $NOMAD_CONFIG_DIR/license.hclic
+sudo echo "${consul_license}" > $CONSUL_CONFIG_DIR/license.hclic
+sudo echo "${nomad_license}" > $NOMAD_CONFIG_DIR/license.hclic
 
 PUBLIC_IP_ADDRESS=${lb_ip}
 # Retrieve certificates

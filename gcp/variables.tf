@@ -50,3 +50,19 @@ variable "root_block_device_size" {
   description = "The volume size of the root block device."
   default     = 20
 }
+
+#------------------------------------------------------------------------------#
+# Cluster Related Variables
+#------------------------------------------------------------------------------#
+
+# Used to define Consul datacenter and Nomad region
+variable "domain" {
+  description = "Domain used to deploy Consul and Nomad and to generate TLS certificates."
+  default     = "global"
+}
+
+# Used to define Consul and Nomad domain
+variable "datacenter" {
+  description = "Datacenter used to deploy Consul and Nomad and to generate TLS certificates."
+  default     = "dc1"
+}

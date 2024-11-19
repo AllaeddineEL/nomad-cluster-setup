@@ -1,9 +1,3 @@
-provider "google" {
-  project = var.project
-  region  = var.region
-  zone    = var.zone
-}
-
 resource "google_compute_network" "hashistack" {
   name = "hashistack-${var.name}"
 }
@@ -85,9 +79,9 @@ data "google_compute_image" "hashistack_image" {
   filter      = "name eq ^hashistack.*"
 
 }
-resource "random_uuid" "consul_token" {
-  count = 2
-}
+# resource "random_uuid" "consul_token" {
+#   count = 2
+# }
 
 resource "google_compute_instance" "server" {
   count        = var.server_count
@@ -130,32 +124,26 @@ resource "google_compute_instance" "server" {
     nomad_consul_token_secret = random_uuid.consul_token[1].result
     nomad_license             = file("/root/license/license.nomad")
     consul_license            = file("/root/license/license.consul")
+
+    domain           = var.domain,
+    datacenter       = var.datacenter,
+    server_count     = "${var.server_count}",
+    consul_node_name = "consul-server-${count.index}",
+
+    consul_encryption_key   = random_id.consul_gossip_key.b64_std,
+    consul_management_token = random_uuid.consul_mgmt_token.result,
+    nomad_node_name         = "nomad-server-${count.index}",
+    nomad_encryption_key    = random_id.nomad_gossip_key.b64_std,
+    nomad_management_token  = random_uuid.nomad_mgmt_token.result,
+    ca_certificate          = base64gzip("${tls_self_signed_cert.datacenter_ca.cert_pem}"),
+    agent_certificate       = base64gzip("${tls_locally_signed_cert.server_cert[count.index].cert_pem}"),
+    agent_key               = base64gzip("${tls_private_key.server_key[count.index].private_key_pem}")
   })
   metadata = {
     "ssh-keys" = <<EOT
       ubuntu:${trimspace(tls_private_key.ssh_key.public_key_openssh)}
      EOT
   }
-
-  # connection {
-  #   type        = "ssh"
-  #   user        = "ubuntu"
-  #   private_key = tls_private_key.ssh_key.private_key_openssh
-  #   agent       = "false"
-  #   host        = self.network_interface.0.access_config.0.nat_ip
-  # }
-  # provisioner "file" {
-  #   source      = "/root/license"
-  #   destination = "/tmp"
-  # }
-  # provisioner "remote-exec" {
-
-  #   inline = [
-  #     "sudo mv /tmp/license/license.nomad /etc/nomad.d/license.hclic",
-  #     "sudo mv /tmp/license/license.vault /etc/vault.d/license.hclic",
-  #     "sudo mv /tmp/license/license.consul /etc/consul.d/license.hclic",
-  #   ]
-  # }
 
 }
 
@@ -198,6 +186,20 @@ resource "google_compute_instance" "client" {
     cloud_env                 = "gce"
     retry_join                = var.retry_join
     nomad_consul_token_secret = random_uuid.consul_token.1.result
+
+    domain           = var.domain,
+    datacenter       = var.datacenter,
+    consul_node_name = "consul-client-${count.index}",
+
+    consul_encryption_key = random_id.consul_gossip_key.b64_std,
+    consul_agent_token    = "${data.consul_acl_token_secret_id.consul-client-agent-token[count.index].secret_id}",
+    consul_default_token  = "${data.consul_acl_token_secret_id.consul-client-default-token[count.index].secret_id}",
+    nomad_node_name       = "nomad-client-${count.index}",
+    nomad_agent_meta      = "isPublic = false"
+    nomad_agent_token     = "${data.consul_acl_token_secret_id.nomad-client-consul-token[count.index].secret_id}",
+    ca_certificate        = base64gzip("${tls_self_signed_cert.datacenter_ca.cert_pem}"),
+    agent_certificate     = base64gzip("${tls_locally_signed_cert.client_cert[count.index].cert_pem}"),
+    agent_key             = base64gzip("${tls_private_key.client_key[count.index].private_key_pem}")
   })
 }
 resource "google_compute_forwarding_rule" "servers_default" {

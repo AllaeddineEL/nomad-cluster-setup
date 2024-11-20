@@ -174,15 +174,15 @@ resource "random_uuid" "consul_mgmt_token" {
 resource "random_uuid" "nomad_mgmt_token" {
 }
 
-resource "time_sleep" "wait_20_seconds" {
+resource "time_sleep" "wait_60_seconds" {
   depends_on = [google_compute_instance.server]
 
-  create_duration = "20s"
+  create_duration = "60s"
 }
 
 # Nomad token for UI access
 resource "nomad_acl_policy" "nomad-user-policy" {
-  depends_on  = [time_sleep.wait_20_seconds]
+  depends_on  = [time_sleep.wait_60_seconds]
   name        = "nomad-user"
   description = "Submit jobs to the environment."
 
@@ -203,7 +203,7 @@ EOT
 }
 
 resource "nomad_acl_token" "nomad-user-token" {
-  depends_on = [time_sleep.wait_20_seconds]
+  depends_on = [time_sleep.wait_60_seconds]
   name       = "nomad-user-token"
   type       = "client"
   policies   = ["nomad-user"]
@@ -212,7 +212,7 @@ resource "nomad_acl_token" "nomad-user-token" {
 
 # Consul client agent token
 resource "consul_acl_token" "consul-client-agent-token" {
-  depends_on  = [time_sleep.wait_20_seconds]
+  depends_on  = [time_sleep.wait_60_seconds]
   count       = var.client_count
   description = "Consul client ${count.index} agent token"
   templated_policies {
@@ -224,14 +224,14 @@ resource "consul_acl_token" "consul-client-agent-token" {
 }
 
 data "consul_acl_token_secret_id" "consul-client-agent-token" {
-  depends_on  = [time_sleep.wait_20_seconds]
+  depends_on  = [time_sleep.wait_60_seconds]
   count       = var.client_count
   accessor_id = consul_acl_token.consul-client-agent-token[count.index].id
 }
 
 # Consul client default token
 resource "consul_acl_token" "consul-client-default-token" {
-  depends_on  = [time_sleep.wait_20_seconds]
+  depends_on  = [time_sleep.wait_60_seconds]
   count       = var.client_count
   description = "Consul client ${count.index} default token"
   templated_policies {
@@ -240,14 +240,14 @@ resource "consul_acl_token" "consul-client-default-token" {
 }
 
 data "consul_acl_token_secret_id" "consul-client-default-token" {
-  depends_on  = [time_sleep.wait_20_seconds]
+  depends_on  = [time_sleep.wait_60_seconds]
   count       = var.client_count
   accessor_id = consul_acl_token.consul-client-default-token[count.index].id
 }
 
 # Nomad client Consul token
 resource "consul_acl_token" "nomad-client-consul-token" {
-  depends_on  = [time_sleep.wait_20_seconds]
+  depends_on  = [time_sleep.wait_60_seconds]
   count       = var.client_count
   description = "Nomad client ${count.index} Consul token"
   templated_policies {
@@ -256,7 +256,7 @@ resource "consul_acl_token" "nomad-client-consul-token" {
 }
 
 data "consul_acl_token_secret_id" "nomad-client-consul-token" {
-  depends_on  = [time_sleep.wait_20_seconds]
+  depends_on  = [time_sleep.wait_60_seconds]
   count       = var.client_count
   accessor_id = consul_acl_token.nomad-client-consul-token[count.index].id
 }

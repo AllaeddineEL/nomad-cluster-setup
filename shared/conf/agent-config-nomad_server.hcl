@@ -24,6 +24,7 @@ server {
   enabled          = true
   bootstrap_expect = _NOMAD_SERVER_COUNT
   encrypt = "_NOMAD_ENCRYPTION_KEY"
+  license_path = "/etc/nomad.d/license.hclic"
 }
 
 ui {

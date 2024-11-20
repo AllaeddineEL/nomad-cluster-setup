@@ -11,19 +11,23 @@ terraform {
     }
     tls = {
       source  = "hashicorp/tls"
-      version = "4.0.5"
+      version = "~> 4.0.5"
     }
     local = {
       source  = "hashicorp/local"
-      version = "2.5.1"
+      version = "~> 2.5.1"
     }
     consul = {
       source  = "hashicorp/consul"
-      version = "2.21.0"
+      version = "~> 2.21.0"
     }
     nomad = {
       source  = "hashicorp/nomad"
-      version = "2.3.1"
+      version = "~> 2.3.1"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.12.1"
     }
   }
 }

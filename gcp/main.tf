@@ -18,10 +18,10 @@ resource "google_compute_firewall" "consul_nomad_ui_ingress" {
     protocol = "tcp"
     ports    = [8500]
   }
-  # Vault
+  # Consul HTTPS
   allow {
     protocol = "tcp"
-    ports    = [8200]
+    ports    = [8443]
   }
 }
 
@@ -115,15 +115,13 @@ resource "google_compute_instance" "server" {
   }
 
   metadata_startup_script = templatefile("${path.module}/../shared/data-scripts/user-data-server.sh", {
-    server_count              = var.server_count
-    region                    = var.region
-    cloud_env                 = "gce"
-    retry_join                = var.retry_join
-    lb_ip                     = google_compute_forwarding_rule.servers_default.ip_address
-    nomad_consul_token_id     = random_uuid.consul_token[0].result
-    nomad_consul_token_secret = random_uuid.consul_token[1].result
-    nomad_license             = file("/root/license/license.nomad")
-    consul_license            = file("/root/license/license.consul")
+    server_count   = var.server_count
+    region         = var.region
+    cloud_env      = "gce"
+    retry_join     = var.retry_join
+    lb_ip          = google_compute_forwarding_rule.servers_default.ip_address
+    nomad_license  = file("/root/license/license.nomad")
+    consul_license = file("/root/license/license.consul")
 
     domain           = var.domain,
     datacenter       = var.datacenter,
@@ -182,10 +180,9 @@ resource "google_compute_instance" "client" {
   }
 
   metadata_startup_script = templatefile("${path.module}/../shared/data-scripts/user-data-client.sh", {
-    region                    = var.region
-    cloud_env                 = "gce"
-    retry_join                = var.retry_join
-    nomad_consul_token_secret = random_uuid.consul_token.1.result
+    region     = var.region
+    cloud_env  = "gce"
+    retry_join = var.retry_join
 
     domain           = var.domain,
     datacenter       = var.datacenter,

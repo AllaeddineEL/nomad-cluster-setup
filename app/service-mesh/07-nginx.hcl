@@ -10,13 +10,38 @@ variable "region" {
   default     = "global"
 }
 
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "frontend-team"
+}
+variable "product_api_port" {
+  description = "Product API Port"
+  default = 9090
+}
+
+variable "frontend_port" {
+  description = "Frontend Port"
+  default = 3000
+}
+
+variable "payments_api_port" {
+  description = "Payments API Port"
+  default = 8080
+}
+
+variable "public_api_port" {
+  description = "Public API Port"
+  default = 8081
+}
+
 variable "nginx_port" {
   description = "Nginx Port"
   default = 80
 }
-variable "nomad_ns" {
-  description = "The Namespace name to deploy the DB task"
-  default = "frontend-team"
+
+variable "db_port" {
+  description = "Postgres Database Port"
+  default = 5432
 }
 # Begin Job Spec
 
@@ -26,20 +51,39 @@ job "nginx-reverse-proxy" {
   datacenters = var.datacenters
   namespace = var.nomad_ns
   group "nginx" {
+    count = 1
     network {
-      mode = "host"
-      port "nginx" {
-        static = var.nginx_port
-        to = var.nginx_port
+      mode = "bridge"
+      port = "${var.nginx_port}"
+    }
+    service {
+      name = "nginx"
+      provider = "consul"
+      port = "${var.nginx_port}"
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "public-api"
+              local_bind_port = 8081
+            }
+            upstreams {
+              destination_name = "frontend"
+              local_bind_port = 3000
+            }
+          }
+        }
+      }
+      check {
+        name      = "NGINX ready"
+        type      = "http"
+        path			= "/health"
+        interval  = "5s"
+        timeout   = "5s"
       }
     }
     task "nginx" {
       driver = "docker"
-      service {
-        name = "nginx"
-        provider = "consul"
-        port = "nginx"
-      }
       meta {
         service = "nginx-reverse-proxy"
       }
@@ -55,9 +99,13 @@ job "nginx-reverse-proxy" {
       }
       template {
         data =  <<EOF
+          proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=STATIC:10m inactive=7d use_temp_path=off;
+          upstream frontend_upstream {
+              server 127.0.0.1:${var.frontend_port};
+          }
           server {
-            server_name localhost;
-            listen 80 default_server;
+            server_name "";
+            listen ${var.nginx_port};
 
             proxy_http_version 1.1;
 
@@ -78,20 +126,16 @@ job "nginx-reverse-proxy" {
             proxy_buffering off;
 
             location / {
-            {{ range service "frontend" }}
-              proxy_pass http://{{ .Address }}:{{ .Port }};{{- end }}
+              proxy_pass http://frontend_upstream;
             }
 
             location /static {
               proxy_cache_valid 60m;
-              {{ range service "frontend" }}
-              proxy_pass http://{{ .Address }}:{{ .Port }};{{- end }}
+              proxy_pass http://frontend_upstream;
             }
 
             location /api {
-              {{ range service "public-api" }}
-              proxy_pass http://{{ .Address }}:{{ .Port }};
-              {{ end }}
+              proxy_pass http://127.0.0.1:${var.public_api_port};
             }
 
             error_page   500 502 503 504  /50x.html;

@@ -26,17 +26,25 @@ job "public-api" {
   datacenters = var.datacenters
   namespace   = var.nomad_ns
   group "public-api" {
+    count = 1
     network {
       port "public-api" {
       }
     }
-    task "public-api" {
-      driver = "docker"
-      service {
+    service {
         name = "public-api"
         provider = "consul"
         port = "public-api"
-      }
+        check {
+          name      = "Public API ready"
+					type      = "http"
+          path			= "/health"
+					interval  = "5s"
+					timeout   = "5s"
+        }
+    }
+    task "public-api" {
+      driver = "docker"
       meta {
         service = "public-api"
       }

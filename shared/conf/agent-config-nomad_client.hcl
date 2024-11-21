@@ -80,7 +80,14 @@ consul {
 #   enabled = true
 #   address = "http://active.vault.service.consul:8200"
 # }
-
+vault {
+  enabled = true
+  address = "http://vault.service.dc1.global:8200"
+   default_identity {
+    aud = ["vault.io"]
+    ttl = "1h"
+  }
+}
 # -----------------------------+
 # SECURITY CONFIG              |
 # -----------------------------+

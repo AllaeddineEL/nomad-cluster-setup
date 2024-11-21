@@ -13,6 +13,20 @@ variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
   default = "frontend-team"
 }
+variable "frontend_max_instances" {
+  description = "The maximum number of instances to scale up to."
+  default     = 5
+}
+
+variable "frontend_max_scale_up" {
+  description = "The maximum number of instances to scale up by."
+  default     = 1
+}
+
+variable "frontend_max_scale_down" {
+  description = "The maximum number of instances to scale down by."
+  default     = 2
+}
 # Begin Job Spec
 
 job "frontend" {
@@ -21,6 +35,29 @@ job "frontend" {
   datacenters = var.datacenters
   namespace = var.nomad_ns
   group "frontend" {
+    scaling {
+      enabled = true
+      min     = 1
+      max     = var.frontend_max_instances
+
+      policy {
+        evaluation_interval = "5s"
+        cooldown            = "10s"
+
+        check "high-cpu-usage" {
+          source = "nomad-apm"
+          query = "max_cpu-allocated"
+
+          strategy "target-value" {
+            driver = "target-value"
+            target = 70
+            threshold = 0.05
+            max_scale_up = var.frontend_max_scale_up
+            max_scale_down = var.frontend_max_scale_down
+          }
+        }
+      }
+    }
     network {
       port "frontend" {
       }
@@ -31,6 +68,13 @@ job "frontend" {
         name = "frontend"
         provider = "consul"
         port = "frontend"
+        check {
+          name      = "Frontend ready"
+					type      = "http"
+          path      = "/"
+					interval  = "5s"
+					timeout   = "5s"
+        }
       }
       meta {
         service = "frontend"
@@ -47,6 +91,10 @@ job "frontend" {
       env {
           NEXT_PUBLIC_FOOTER_FLAG = "HashiCups-v1"
           NEXT_PUBLIC_PUBLIC_API_URL="/"
+      }
+      resources {
+        cpu    = 200
+        memory = 400
       }
       template {
         data =  <<EOF

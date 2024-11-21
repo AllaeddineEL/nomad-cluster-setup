@@ -43,9 +43,25 @@ job "product-api-db" {
   namespace   = var.nomad_ns
 
   group "db" {
+    count = 1
     network {
       port "db" {
        static = 5432
+      }
+    }
+    service {
+      name = "product-api-db"
+      provider = "consul"
+      port = "db"
+      check {
+        name      = "Database ready"
+        type      = "script"
+        command   = "/usr/bin/pg_isready"
+        args      = ["-d", "${var.db_port}"]
+        interval  = "5s"
+        timeout   = "2s"
+        on_update = "ignore_warnings"
+        task      = "db"
       }
     }
     task "db" {
@@ -54,11 +70,6 @@ job "product-api-db" {
         sidecar = false
       }
       driver = "docker"
-      service {
-        name = "product-api-db"
-        provider = "consul"
-        port = "db"
-      }
       meta {
         service = "database"
       }

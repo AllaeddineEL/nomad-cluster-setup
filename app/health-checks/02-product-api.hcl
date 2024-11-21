@@ -34,9 +34,32 @@ job "product-api" {
   namespace   = var.nomad_ns
 
   group "product-api" {
+    count = 1
     network {
       port "product-api" {
       }
+    }
+    service {
+        name = "product-api"
+        provider = "consul"
+        port = "product-api"
+        # DB connectivity check 
+        check {
+          name        = "DB connection ready"
+					type      = "http" 
+          path      = "/health/readyz" 
+					interval  = "5s"
+					timeout   = "5s"
+        }
+
+        # Server ready check
+        check {
+          name        = "Product API ready"
+          type      = "http" 
+          path      = "/health/livez" 
+          interval  = "5s"
+          timeout   = "5s"
+        }
     }
     task "product-api" {
       lifecycle {
@@ -44,11 +67,7 @@ job "product-api" {
         sidecar = false
       }
       driver = "docker"
-      service {
-        name = "product-api"
-        provider = "consul"
-        port = "product-api"
-      }
+      
       meta {
         service = "product-api"
       }

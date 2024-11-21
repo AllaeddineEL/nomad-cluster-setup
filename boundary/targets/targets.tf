@@ -87,7 +87,7 @@ resource "boundary_target" "dev-db-target" {
   scope_id                 = boundary_scope.dev_project.id
   session_connection_limit = -1
   default_port             = 5432
-  address                  = "product-api-db.service.consul"
+  address                  = "product-api-db.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 
   brokered_credential_source_ids = [
@@ -99,7 +99,7 @@ resource "boundary_target" "dev-db-target" {
 resource "boundary_credential_store_vault" "dev_vault" {
   name          = "dev_vault"
   description   = "Dev Vault Credential Store"
-  address       = "http://vault.service.consul:8200"
+  address       = "http://vault.service.dc1.global:8200"
   token         = vault_token.boundary-token-dev.client_token
   scope_id      = boundary_scope.dev_project.id
   worker_filter = "\"${var.region}\" in \"/tags/region\""
@@ -122,6 +122,6 @@ resource "boundary_target" "hashicups" {
   scope_id                 = boundary_scope.dev_project.id
   session_connection_limit = -1
   default_port             = 80
-  address                  = "nginx.service.consul"
+  address                  = "nginx.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }

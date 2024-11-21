@@ -42,8 +42,7 @@ provider "terracurl" {}
 
 
 provider "consul" {
-  address = "${data.terraform_remote_state.local.outputs.lb_address_consul_nomad}:8500"
-  token   = data.terraform_remote_state.local.outputs.consul_bootstrap_token_secret
+
 }
 
 data "consul_keys" "nomad_token" {
@@ -54,8 +53,7 @@ data "consul_keys" "nomad_token" {
 }
 
 provider "nomad" {
-  address   = "${data.terraform_remote_state.local.outputs.lb_address_consul_nomad}:4646"
-  secret_id = data.consul_keys.nomad_token.var.nomad_mgmt_token
+
 }
 provider "boundary" {
   addr                   = data.terraform_remote_state.boundary_cluster.outputs.boundary_url

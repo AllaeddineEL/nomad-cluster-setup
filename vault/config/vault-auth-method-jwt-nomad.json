@@ -4,5 +4,6 @@
         "RS256",
         "EdDSA"
     ],
-    "default_role": "nomad-workloads"
+    "default_role": "nomad-workloads",
+    "jwks_ca_pem ": "_NOMAD_CA_PEM"
 }

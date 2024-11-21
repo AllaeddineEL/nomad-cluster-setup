@@ -203,7 +203,7 @@ EOT
 }
 
 resource "nomad_acl_token" "nomad-user-token" {
-  depends_on = [time_sleep.wait_60_seconds]
+  depends_on = [time_sleep.wait_60_seconds, data.consul_acl_token_secret_id.nomad-client-consul-token]
   name       = "nomad-user-token"
   type       = "client"
   policies   = ["nomad-user"]
@@ -212,7 +212,7 @@ resource "nomad_acl_token" "nomad-user-token" {
 
 # Consul client agent token
 resource "consul_acl_token" "consul-client-agent-token" {
-  depends_on  = [time_sleep.wait_60_seconds]
+  depends_on  = [time_sleep.wait_60_seconds, data.consul_acl_token_secret_id.nomad-client-consul-token]
   count       = var.client_count
   description = "Consul client ${count.index} agent token"
   templated_policies {

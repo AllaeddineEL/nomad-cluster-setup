@@ -27,6 +27,6 @@ resource "boundary_target" "vault" {
   scope_id                 = boundary_scope.shared_svc_project.id
   session_connection_limit = -1
   default_port             = 8200
-  address                  = "vault.service.consul"
+  address                  = "vault.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }

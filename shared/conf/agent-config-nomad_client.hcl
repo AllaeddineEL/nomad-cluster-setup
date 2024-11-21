@@ -1,7 +1,7 @@
 # -----------------------------+
 # BASE CONFIG                  |
 # -----------------------------+
-
+plugin_dir = "/opt/nomad/data/plugins"
 datacenter = "_NOMAD_DATACENTER"
 region = "_NOMAD_DOMAIN"
 
@@ -9,7 +9,7 @@ region = "_NOMAD_DOMAIN"
 name = "_NOMAD_NODE_NAME"
 
 # Data Persistence
-data_dir = "/opt/nomad"
+data_dir = "/opt/nomad/data"
 
 # Logging
 log_level = "INFO"

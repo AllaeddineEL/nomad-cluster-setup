@@ -33,7 +33,35 @@ variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
   default = "data-team"
 }
+variable "product_api_port" {
+  description = "Product API Port"
+  default = 9090
+}
 
+variable "frontend_port" {
+  description = "Frontend Port"
+  default = 3000
+}
+
+variable "payments_api_port" {
+  description = "Payments API Port"
+  default = 8080
+}
+
+variable "public_api_port" {
+  description = "Public API Port"
+  default = 8081
+}
+
+variable "nginx_port" {
+  description = "Nginx Port"
+  default = 80
+}
+
+variable "db_port" {
+  description = "Postgres Database Port"
+  default = 5432
+}
 # Begin Job Spec
 
 job "product-api-db" {
@@ -46,7 +74,7 @@ job "product-api-db" {
     count = 1
     network {
       port "db" {
-       static = 5432
+       static = "${var.db_port}"
       }
     }
     service {

@@ -7,3 +7,6 @@ output "boundary_url" {
   description = "The public URL of the HCP Boundary Cluster"
   value       = data.terraform_remote_state.boundary_cluster.outputs.boundary_url
 }
+output "hashicups_target_id" {
+  value = boundary_target.hashicups.id
+}

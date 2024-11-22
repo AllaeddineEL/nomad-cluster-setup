@@ -125,3 +125,14 @@ resource "boundary_target" "hashicups" {
   address                  = "nginx.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }
+
+resource "boundary_target" "frontend" {
+  type                     = "tcp"
+  name                     = "frontend"
+  description              = "Connect to the frontend App"
+  scope_id                 = boundary_scope.dev_project.id
+  session_connection_limit = -1
+  default_port             = 3000
+  address                  = "frontend.service.dc1.global"
+  egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
+}

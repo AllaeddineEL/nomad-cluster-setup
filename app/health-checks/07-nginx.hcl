@@ -101,6 +101,11 @@ job "nginx-reverse-proxy" {
               proxy_pass http://{{ .Address }}:{{ .Port }};
               {{ end }}
             }
+            location = /health {
+              access_log off;
+              add_header 'Content-Type' 'application/json';
+              return 200 '{"status":"UP"}';
+            }
 
             error_page   500 502 503 504  /50x.html;
             location = /50x.html {

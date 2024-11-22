@@ -1,9 +1,8 @@
 {
-    "jwks_url": "http://nomad.service.consul:4646/.well-known/jwks.json",
+    "jwks_url": "https://nomad.service.dc1.global:4646/.well-known/jwks.json",
     "jwt_supported_algs": [
         "RS256",
         "EdDSA"
     ],
-    "default_role": "nomad-workloads",
-    "jwks_ca_pem ": "_NOMAD_CA_PEM"
+    "default_role": "nomad-workloads"
 }

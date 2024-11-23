@@ -52,11 +52,11 @@ fi
 echo -e "${_COL}Create Nomad ACL policy 'autoscaler'${_NC}"
 
 tee ${_scale_policy_FILE} > /dev/null << EOF
-namespace "frontend-team" {
+namespace "*" {
   policy = "scale"
 }
 
-namespace "frontend-team" {
+namespace "*" {
   capabilities = ["read-job"]
 }
 
@@ -64,7 +64,7 @@ operator {
   policy = "read"
 }
 
-namespace "default" {
+namespace "*" {
   variables {
     path "nomad-autoscaler/lock" {
       capabilities = ["write"]

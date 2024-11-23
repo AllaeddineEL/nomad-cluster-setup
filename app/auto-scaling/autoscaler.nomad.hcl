@@ -53,6 +53,7 @@ job "autoscaler" {
           nomad {
             address = "https://nomad.service.dc1.global:4646"
             skip_verify = "true"
+            namespace = "*"
           }
 
           apm "nomad" {

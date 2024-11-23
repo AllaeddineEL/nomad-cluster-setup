@@ -9,7 +9,7 @@ job "loadtest" {
   ## ---------------------------------------------------------------------------
 
   group "loadtest" {
-
+    count = 50
     network {
       port "http" {}
       dns {
@@ -27,13 +27,13 @@ job "loadtest" {
 
       config {
         image   = "ricoli/hey:latest"
-        command = "bash"
+        entrypoint = ["sh"]
         ports   = ["http"]
-        args = ["-c", "chmod 777 /local/loadtest.sh && ./local/loadtest.sh http://frontend.service.dc1.global:3000" ]
+        args = ["-c", "chmod 777 /local/loadtest.sh && /local/loadtest.sh http://frontend.service.dc1.global:3000" ]
       }
       template {
         data = <<EOF
-          #!/bin/bash
+          #!/bin/sh
 
           # This script requires the hey tool
           # https://github.com/rakyll/hey

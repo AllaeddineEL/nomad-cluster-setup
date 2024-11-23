@@ -182,7 +182,7 @@ resource "time_sleep" "wait_60_seconds" {
 
 # Nomad token for UI access
 resource "nomad_acl_policy" "nomad-user-policy" {
-  depends_on  = [time_sleep.wait_60_seconds]
+  depends_on  = [time_sleep.wait_60_seconds, google_compute_instance.client]
   name        = "nomad-user"
   description = "Submit jobs to the environment."
 
@@ -203,7 +203,7 @@ EOT
 }
 
 resource "nomad_acl_token" "nomad-user-token" {
-  depends_on = [time_sleep.wait_60_seconds, data.consul_acl_token_secret_id.nomad-client-consul-token]
+  depends_on = [time_sleep.wait_60_seconds, google_compute_instance.client]
   name       = "nomad-user-token"
   type       = "client"
   policies   = ["nomad-user"]

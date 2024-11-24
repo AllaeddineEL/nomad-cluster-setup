@@ -55,8 +55,8 @@ job "frontend" {
 
           strategy "target-value" {
             driver = "target-value"
-            target = 70
-            threshold = 0.05
+            target = 20
+            threshold = 0.0001
             max_scale_up = var.frontend_max_scale_up
             max_scale_down = var.frontend_max_scale_down
           }

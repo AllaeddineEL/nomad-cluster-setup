@@ -85,7 +85,7 @@ job "product-api-db" {
         name      = "Database ready"
         type      = "script"
         command   = "/usr/bin/pg_isready"
-        args      = ["-d", "${var.db_port}"]
+        args      = ["-q", "-d", "postgres", "-U", "postgres"]
         interval  = "5s"
         timeout   = "2s"
         on_update = "ignore_warnings"

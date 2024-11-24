@@ -77,6 +77,16 @@ consul {
   server_service_name   = "nomad"
   # Specifies if the Nomad servers should join other Nomad servers using Consul.
   server_auto_join      = true
+
+  service_identity {
+    aud = ["consul.io"]
+    ttl = "1h"
+  }
+
+  task_identity {
+    aud = ["consul.io"]
+    ttl = "1h"
+  }
 }
 
 # Vault              

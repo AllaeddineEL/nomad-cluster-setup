@@ -81,14 +81,21 @@ job "product-api-db" {
       port = "${var.db_port}"
 
       connect {
-        sidecar_service {}
+        gateway {
+          proxy {}
+          terminating {
+            service {
+              name = "vault"
+            }
+          }
+        }
       }
 
       check {
         name      = "Database ready"
         type      = "script"
         command   = "/usr/bin/pg_isready"
-        args      = ["-d", "${var.db_port}"]
+        args      = ["-q", "-d", "postgres", "-U", "postgres"]
         interval  = "5s"
         timeout   = "2s"
         on_update = "ignore_warnings"

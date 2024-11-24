@@ -162,7 +162,10 @@ echo "Create Nomad configuration files"
 # Create Nomad server token to interact with Consul
 OUTPUT=$(CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl token create -description="Nomad server auto-join token for $CONSUL_NODE_NAME" --format json -templated-policy="builtin/nomad-server")
 CONSUL_AGENT_TOKEN=$(echo "$OUTPUT" | jq -r ".SecretID")
+CONSUL_AGENT_TOKEN_ID=$(echo "$OUTPUT" | jq -r ".AccessorID")
 
+CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl policy create -name 'nomad-agents' -rules="@$CONFIG_DIR/agent-policy-consul_nomad_agents.hcl" --format json
+CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl token update -id $CONSUL_AGENT_TOKEN_ID -append-policy-name nomad-agents
 # Copy template into Nomad configuration directory
 sudo cp $CONFIG_DIR/agent-config-nomad_server.hcl $NOMAD_CONFIG_DIR/nomad.hcl
 

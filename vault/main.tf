@@ -1,7 +1,4 @@
-resource "nomad_namespace" "vault" {
-  name        = "vault-cluster"
-  description = "Vault servers namespace"
-}
+
 resource "nomad_job" "vault" {
   #jobspec          = file("vault.nomad.hcl")
 
@@ -9,7 +6,7 @@ resource "nomad_job" "vault" {
   jobspec          = <<EOT
 
 job "vault-cluster" {
-  namespace   = "${nomad_namespace.vault.name}"
+  namespace   = "vault-cluster"
   datacenters = ["dc1"]
   type        = "service"
 

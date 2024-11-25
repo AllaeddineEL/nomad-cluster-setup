@@ -164,8 +164,8 @@ OUTPUT=$(CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl token create -des
 CONSUL_AGENT_TOKEN=$(echo "$OUTPUT" | jq -r ".SecretID")
 CONSUL_AGENT_TOKEN_ID=$(echo "$OUTPUT" | jq -r ".AccessorID")
 
-CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl policy create -name 'nomad-agents-svc-mesh' -rules="@$CONFIG_DIR/agent-policy-consul_nomad_agents.hcl" --format json
-CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl token update -id $CONSUL_AGENT_TOKEN_ID -append-policy-name nomad-agents-svc-mesh
+CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl policy create -name "nomad-agents-svc-mesh-$CONSUL_NODE_NAME" -rules="@$CONFIG_DIR/agent-policy-consul_nomad_agents.hcl" --format json
+CONSUL_HTTP_TOKEN=$CONSUL_MANAGEMENT_TOKEN consul acl token update -id $CONSUL_AGENT_TOKEN_ID -append-policy-name nomad-agents-svc-mesh-$CONSUL_NODE_NAME
 # Copy template into Nomad configuration directory
 sudo cp $CONFIG_DIR/agent-config-nomad_server.hcl $NOMAD_CONFIG_DIR/nomad.hcl
 

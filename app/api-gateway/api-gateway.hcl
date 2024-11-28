@@ -31,12 +31,6 @@ job "api-gateway" {
 
   namespace = var.namespace
 
-  constraint {
-    attribute = "${meta.nodeRole}"
-    operator  = "="
-    value     = "ingress"
-  }
-
   ## ---------------------------------------------------------------------------
   ##  Group "API Gateway"
   ## ---------------------------------------------------------------------------

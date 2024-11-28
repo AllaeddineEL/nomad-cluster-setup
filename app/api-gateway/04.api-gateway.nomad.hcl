@@ -13,6 +13,9 @@ variable "envoy_image" {
   type        = string
   default     = "hashicorp/envoy:1.29.7"
 }
+variable "consul_public_address"{
+  description = "The consul public address"
+}
 
 variable "namespace" {
   description = "The Nomad namespace to use, which will bind to a specific Consul role"
@@ -174,7 +177,7 @@ job "api-gateway" {
             port    = 8443
             address = ""
             meta = {
-              public_address = "https://{{ env "attr.unique.platform.aws.public-ipv4" }}:8443"
+              public_address = "${var.consul_public_address}"
             }
           }
         EOF

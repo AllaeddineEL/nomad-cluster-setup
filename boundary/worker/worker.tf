@@ -86,6 +86,7 @@ job "boundary-worker" {
 
       resources {
         memory = 600
+        cpu    = 300
       }
     }
   }

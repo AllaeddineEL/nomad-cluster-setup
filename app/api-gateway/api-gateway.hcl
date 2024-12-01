@@ -13,7 +13,7 @@ variable "envoy_image" {
   type        = string
   default     = "hashicorp/envoy:1.29.7"
 }
-variable "consul_public_address"{
+variable "api_gateway_public_address"{
   description = "The consul public address"
 }
 
@@ -39,9 +39,13 @@ job "api-gateway" {
 
     network {
       mode = "bridge"
-      port "https" {
-        static = 8443
-        to     = 8443
+      port "http" {
+        static = 8088
+        to     = 8088
+      }
+      port "tcp" {
+        static = 5555
+        to     = 5555
       }
     }
 
@@ -168,10 +172,10 @@ job "api-gateway" {
             id      = "api-gateway"
             name    = "api-gateway"
             kind    = "api-gateway"
-            port    = 8443
+            port    = 8088
             address = ""
             meta = {
-              public_address = "${var.consul_public_address}"
+              public_address = "${var.api_gateway_public_address}"
             }
           }
         EOF

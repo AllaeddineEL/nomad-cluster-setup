@@ -1,6 +1,9 @@
 output "lb_address_consul_nomad" {
   value = "http://${google_compute_forwarding_rule.servers_default.ip_address}"
 }
+output "lb_address_api_gateway" {
+  value = google_compute_forwarding_rule.clients_default.ip_address
+}
 
 output "gcp_project" {
   value = var.project

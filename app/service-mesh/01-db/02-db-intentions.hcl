@@ -4,5 +4,9 @@ Sources = [
   {
     Name   = "vault"
     Action = "allow"
+  },
+  {
+    Name   = "api-gateway"
+    Action = "allow"
   }
 ]

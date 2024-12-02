@@ -175,7 +175,7 @@ job "api-gateway" {
             port    = 8088
             address = ""
             meta = {
-              public_address = "${var.api_gateway_public_address}"
+              public_address = "http://${var.api_gateway_public_address}:8088"
             }
           }
         EOF

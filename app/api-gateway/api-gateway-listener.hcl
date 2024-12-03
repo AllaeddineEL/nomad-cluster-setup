@@ -4,7 +4,7 @@ Name = "hashicups-gateway"
 // Each listener configures a port which can be used to access the Consul cluster
 Listeners = [
   {
-    Port     = 5432
+    Port     = 5555
     Name     = "hashicups-db-tcp-route"
     Protocol = "tcp"
   },

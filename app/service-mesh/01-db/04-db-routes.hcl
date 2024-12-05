@@ -12,7 +12,7 @@ Services = [
 Parents = [
   {
     Kind        = "api-gateway"
-    Name        = "hashicups-gateway"
+    Name        = "api-gateway"
     SectionName = "hashicups-db-tcp-route"
   }
 ]

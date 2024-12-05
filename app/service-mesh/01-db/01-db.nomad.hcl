@@ -73,14 +73,17 @@ job "product-api-db" {
   group "db" {
     count = 1
     network {
-      port "db" {
-       static = "${var.db_port}"
-      }
+      mode = "bridge"
     }
     service {
       name = "product-api-db"
       provider = "consul"
-      port = "db"
+      port = "${var.db_port}"
+
+      connect {
+        sidecar_service {}
+      }
+
       check {
         name      = "Database ready"
         type      = "script"
@@ -93,10 +96,6 @@ job "product-api-db" {
       }
     }
     task "db" {
-      lifecycle {
-        hook = "prestart"
-        sidecar = false
-      }
       driver = "docker"
       meta {
         service = "database"
@@ -104,7 +103,7 @@ job "product-api-db" {
       vault {}
       config {
         image   = "hashicorpdemoapp/product-api-db:${var.product_api_db_version}"
-        ports = ["db"]
+        ports = ["${var.db_port}"]
       }
       template {
         data        = <<EOF

@@ -1,5 +1,5 @@
 Kind = "api-gateway"
-Name = "hashicups-gateway"
+Name = "api-gateway"
 
 // Each listener configures a port which can be used to access the Consul cluster
 Listeners = [

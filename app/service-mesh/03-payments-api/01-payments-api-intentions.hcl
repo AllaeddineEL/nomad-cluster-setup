@@ -1,8 +1,8 @@
 Kind = "service-intentions"
-Name = "product-api-db"
+Name = "payments-api"
 Sources = [
   {
-    Name   = "api-gateway"
+    Name   = "public-api"
     Action = "allow"
   }
 ]

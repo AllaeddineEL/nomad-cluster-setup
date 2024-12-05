@@ -1,5 +1,5 @@
 Kind = "service-intentions"
-Name = "product-api-db"
+Name = "nginx"
 Sources = [
   {
     Name   = "api-gateway"

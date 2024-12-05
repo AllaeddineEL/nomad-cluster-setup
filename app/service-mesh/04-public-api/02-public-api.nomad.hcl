@@ -60,29 +60,23 @@ job "public-api" {
       mode = "bridge"
     }
     service {
-        name = "public-api"
-        provider = "consul"
-        port = "${var.public_api_port}"
-        check {
-          name      = "Public API ready"
-          address_mode = "alloc"
-					type      = "http"
-          path			= "/health"
-					interval  = "5s"
-					timeout   = "5s"
-        }
-        connect {
-          sidecar_service {
-            proxy {
-              upstreams {
-                destination_name = "product-api"
-                local_bind_port = 9090
-              }
-              upstreams {
-                destination_name = "payments-api"
-                local_bind_port = 8080
-              }
+      name = "public-api"
+      provider = "consul"
+      port = "${var.public_api_port}"
+      check {
+        name      = "Public API ready"
+        address_mode = "alloc"
+        type      = "http"
+        path			= "/health"
+        interval  = "5s"
+        timeout   = "5s"
+      }
+      connect {
+        sidecar_service {
+          proxy {
+            transparent_proxy {
             }
+          }
         }
       }
     }

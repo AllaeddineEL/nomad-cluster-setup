@@ -59,7 +59,12 @@ job "frontend" {
       provider = "consul"
       port = "${var.frontend_port}"
       connect {
-        sidecar_service {}
+        sidecar_service {
+          proxy {
+            transparent_proxy {
+            }
+          }
+        }
       }
       check {
         name      = "Frontend ready"

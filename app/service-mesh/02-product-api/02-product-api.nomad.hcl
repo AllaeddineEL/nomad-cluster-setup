@@ -74,9 +74,7 @@ job "product-api" {
       connect {
         sidecar_service {
           proxy {
-            upstreams {
-              destination_name = "product-api-db"
-              local_bind_port = 5432
+            transparent_proxy {
             }
           }
         }

@@ -63,13 +63,7 @@ job "nginx-reverse-proxy" {
       connect {
         sidecar_service {
           proxy {
-            upstreams {
-              destination_name = "public-api"
-              local_bind_port = 8081
-            }
-            upstreams {
-              destination_name = "frontend"
-              local_bind_port = 3000
+            transparent_proxy {
             }
           }
         }

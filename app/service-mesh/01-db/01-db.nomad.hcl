@@ -81,7 +81,12 @@ job "product-api-db" {
       port = "${var.db_port}"
 
       connect {
-        sidecar_service {}
+        sidecar_service {
+          proxy {
+            transparent_proxy {
+            }
+          }
+        }
       }
 
       check {

@@ -68,7 +68,12 @@ job "payments-api" {
       port = "${var.payments_api_port}"
 
       connect {
-        sidecar_service {}
+        sidecar_service {
+          proxy {
+            transparent_proxy {
+            }
+          }
+        }
       }
 
       check {

@@ -115,7 +115,7 @@ job "product-api" {
       template {
         data        = <<EOH
 {{ range service "product-api-db" }}
-DB_CONNECTION="host=127.0.0.1 port={{ .Port }} user={{with secret "database/creds/product-api-db-owner"}}{{.Data.username}}{{end}} password={{with secret "database/creds/product-api-db-owner"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
+DB_CONNECTION="host=product-api-db.virtual.global port={{ .Port }} user={{with secret "database/creds/product-api-db-owner"}}{{.Data.username}}{{end}} password={{with secret "database/creds/product-api-db-owner"}}{{.Data.password}}{{end}} dbname=${var.postgres_db} sslmode=disable"
 BIND_ADDRESS = "0.0.0.0:${var.product_api_port}"
 {{ end }}
 EOH

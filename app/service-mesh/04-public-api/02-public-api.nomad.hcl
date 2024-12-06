@@ -70,6 +70,7 @@ job "public-api" {
         path			= "/health"
         interval  = "5s"
         timeout   = "5s"
+        expose   = true
       }
       connect {
         sidecar_service {
@@ -91,8 +92,8 @@ job "public-api" {
       }
       env {
         BIND_ADDRESS = ":${var.public_api_port}"
-        PRODUCT_API_URI = "http://127.0.0.1:${var.product_api_port}"
-        PAYMENT_API_URI = "http://127.0.0.1:${var.payments_api_port}"
+        PRODUCT_API_URI = "http://product-api.virtual.global:${var.product_api_port}"
+        PAYMENT_API_URI = "http://payments-api.virtual.global:${var.payments_api_port}"
       }
     }
   }

@@ -54,7 +54,6 @@ job "nginx-reverse-proxy" {
     count = 1
     network {
       mode = "bridge"
-      port = "${var.nginx_port}"
     }
     service {
       name = "nginx"
@@ -72,8 +71,11 @@ job "nginx-reverse-proxy" {
         name      = "NGINX ready"
         type      = "http"
         path			= "/health"
+        address_mode = "alloc"
         interval  = "5s"
         timeout   = "5s"
+        expose   = true
+      
       }
     }
     task "nginx" {
@@ -84,7 +86,7 @@ job "nginx-reverse-proxy" {
       config {
         image = "nginx:alpine"
         ports = ["nginx"]
-        network_mode = "host"
+        #network_mode = "host"
         mount {
           type   = "bind"
           source = "local/nginx.conf"
@@ -95,7 +97,7 @@ job "nginx-reverse-proxy" {
         data =  <<EOF
           proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=STATIC:10m inactive=7d use_temp_path=off;
           upstream frontend_upstream {
-              server 127.0.0.1:${var.frontend_port};
+              server frontend.virtual.global:${var.frontend_port};
           }
           server {
             server_name "";
@@ -129,7 +131,12 @@ job "nginx-reverse-proxy" {
             }
 
             location /api {
-              proxy_pass http://127.0.0.1:${var.public_api_port};
+              proxy_pass http://public-api.virtual.global:${var.public_api_port};
+            }
+            location = /health {
+              access_log off;
+              add_header 'Content-Type' 'application/json';
+              return 200 '{"status":"UP"}';
             }
 
             error_page   500 502 503 504  /50x.html;

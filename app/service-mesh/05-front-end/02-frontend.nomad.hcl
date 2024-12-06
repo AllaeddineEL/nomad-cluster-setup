@@ -73,6 +73,7 @@ job "frontend" {
         path      = "/"
         interval  = "5s"
         timeout   = "5s"
+        expose   = true
       }
     }
     task "frontend" {

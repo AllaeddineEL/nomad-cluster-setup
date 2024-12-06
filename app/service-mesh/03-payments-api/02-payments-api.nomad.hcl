@@ -83,6 +83,7 @@ job "payments-api" {
         path			= "/actuator/health"
         interval  = "5s"
         timeout   = "5s"
+        expose   = true
       }
     }
     task "payments-api" {

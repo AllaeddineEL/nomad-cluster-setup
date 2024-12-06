@@ -87,6 +87,7 @@ job "product-api" {
         path      = "/health/readyz" 
         interval  = "5s"
         timeout   = "5s"
+        expose   = true
       }
 
       # Server ready check
@@ -97,6 +98,7 @@ job "product-api" {
         path      = "/health/livez" 
         interval  = "5s"
         timeout   = "5s"
+        expose   = true
       }
     }
     task "product-api" {

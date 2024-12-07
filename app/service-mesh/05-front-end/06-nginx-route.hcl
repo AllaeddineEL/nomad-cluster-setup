@@ -1,5 +1,5 @@
 Kind = "http-route"
-Name = "nginb-route"
+Name = "nginx-route"
 
 // Rules define how requests will be routed
 Rules = [
@@ -8,7 +8,7 @@ Rules = [
       {
         Path = {
           Match = "prefix"
-          Value = "/hashicups"
+          Value = "/"
         }
       }
     ]

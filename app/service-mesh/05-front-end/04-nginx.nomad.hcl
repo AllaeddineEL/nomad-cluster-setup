@@ -94,45 +94,6 @@ job "nginx-reverse-proxy" {
         }
       }
       template {
-        // data =  <<EOF
-        //   proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=STATIC:10m inactive=7d use_temp_path=off;
-        //   upstream frontend_upstream {
-        //       server frontend.virtual.global:${var.frontend_port};
-        //   }
-        //   server {
-        //     server_name "";
-        //     listen ${var.nginx_port};
-
-        //     server_tokens off;
-        //     gzip on;
-        //     gzip_proxied any;
-        //     gzip_comp_level 4;
-        //     gzip_types text/css application/javascript image/svg+xml;
-        //     proxy_http_version 1.1;
-        //     proxy_set_header Upgrade $http_upgrade;
-        //     proxy_set_header Connection 'upgrade';
-        //     proxy_set_header Host $host;
-        //     proxy_cache_bypass $http_upgrade;
-
-        //     location / {
-        //       proxy_pass http://frontend_upstream;
-        //     }
-
-        //     location /api {
-        //       proxy_pass http://public-api.virtual.global:${var.public_api_port};
-        //     }
-        //     location = /health {
-        //       access_log off;
-        //       add_header 'Content-Type' 'application/json';
-        //       return 200 '{"status":"UP"}';
-        //     }
-
-        //     error_page   500 502 503 504  /50x.html;
-        //     location = /50x.html {
-        //       root   /usr/share/nginx/html;
-        //     }
-        //   }
-        // EOF
         data =  <<EOF
           events {}
           http {

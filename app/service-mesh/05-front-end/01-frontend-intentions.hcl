@@ -2,7 +2,7 @@ Kind = "service-intentions"
 Name = "frontend"
 Sources = [
   {
-    Name   = "nginx"
+    Name   = "api-gateway"
     Action = "allow"
   }
 ]

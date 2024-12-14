@@ -14,7 +14,7 @@ Rules = [
     ]
     Services = [
       {
-        Name = "nginx"
+        Name = "frontend"
       }
     ]
   }

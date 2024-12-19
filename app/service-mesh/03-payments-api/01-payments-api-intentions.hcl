@@ -4,5 +4,9 @@ Sources = [
   {
     Name   = "public-api"
     Action = "allow"
+  },
+  {
+    Name   = "product-api"
+    Action = "allow"
   }
 ]

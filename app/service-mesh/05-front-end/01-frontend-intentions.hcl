@@ -4,5 +4,9 @@ Sources = [
   {
     Name   = "api-gateway"
     Action = "allow"
+  },
+  {
+    Name   = "nginx"
+    Action = "allow"
   }
 ]

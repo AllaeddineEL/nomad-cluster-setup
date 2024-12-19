@@ -36,7 +36,7 @@ variable "public_api_port" {
 
 variable "nginx_port" {
   description = "Nginx Port"
-  default = 80
+  default = 8080
 }
 
 variable "db_port" {
@@ -63,7 +63,8 @@ job "nginx-reverse-proxy" {
         sidecar_service {
           proxy {
             transparent_proxy {
-              exclude_inbound_ports = ["${var.nginx_port}"]
+              #uid = "120"
+             # exclude_inbound_ports = ["${var.nginx_port}"]
             }
           }
         }
@@ -84,45 +85,37 @@ job "nginx-reverse-proxy" {
         service = "nginx-reverse-proxy"
       }
       config {
-        image = "nginx:stable-alpine"
-        #ports = ["nginx"]
+        image = "bitnami/nginx:1.26-debian-12"
+        ports = ["${var.nginx_port}"]
         #network_mode = "host"
         mount {
           type   = "bind"
           source = "local/nginx.conf"
-          target = "/etc/nginx/nginx.conf"
+          target = "/opt/bitnami/nginx/conf/server_blocks/nginx.conf"
         }
       }
       template {
         data =  <<EOF
-          events {}
-          http {
-            include /etc/nginx/conf.d/*.conf;
-
+            proxy_cache_path /tmp/nginx_cache levels=1:2 keys_zone=STATIC:10m inactive=7d use_temp_path=off;
             server {
-              server_name localhost;
-              listen ${var.nginx_port} default_server;
-
+              server_name "";
+              listen ${var.nginx_port};
+              server_tokens off;
+              gzip on;
+              gzip_proxied any;
+              gzip_comp_level 4;
+              gzip_types text/css application/javascript image/svg+xml;
               proxy_http_version 1.1;
-
               proxy_set_header Upgrade $http_upgrade;
               proxy_set_header Connection 'upgrade';
               proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-              proxy_temp_file_write_size 64k;
-              proxy_connect_timeout 10080s;
-              proxy_send_timeout 10080;
-              proxy_read_timeout 10080;
-              proxy_buffer_size 64k;
-              proxy_buffers 16 32k;
-              proxy_busy_buffers_size 64k;
-              proxy_redirect off;
-              proxy_request_buffering off;
-              proxy_buffering off;
+              proxy_cache_bypass $http_upgrade;
+              if_modified_since off;
+              add_header Last-Modified "";
 
               location / {
                 proxy_pass http://frontend.virtual.global:${var.frontend_port};
+                proxy_set_header  Host  frontend;
               }
 
               location ^~ /hashicups {
@@ -130,8 +123,9 @@ job "nginx-reverse-proxy" {
               }
 
               location /static {
-                proxy_cache_valid 60m;
+                #proxy_cache_valid 60m;
                 proxy_pass http://frontend.virtual.global:${var.frontend_port};
+                proxy_set_header  Host  frontend;
               }
 
               location /api {
@@ -145,12 +139,11 @@ job "nginx-reverse-proxy" {
               }
               error_page   500 502 503 504  /50x.html;
               location = /50x.html {
-                root   /usr/share/nginx/html;
+                root   /opt/bitnami/nginx/html;
               }
               
               
             }
-          }
         EOF
         destination = "local/nginx.conf"
       }

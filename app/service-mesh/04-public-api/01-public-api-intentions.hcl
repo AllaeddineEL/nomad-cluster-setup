@@ -6,7 +6,7 @@ Sources = [
     Action = "allow"
   },
   {
-    Name   = "api-gateway"
+    Name   = "nginx"
     Action = "allow"
   }
 ]

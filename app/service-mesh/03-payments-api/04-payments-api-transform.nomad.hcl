@@ -69,11 +69,11 @@ job "payments-api" {
 
       connect {
         sidecar_service {
-          proxy {
-            transparent_proxy {
+            proxy {
+              transparent_proxy {
+              }
             }
           }
-        }
       }
 
       check {
@@ -125,10 +125,12 @@ spring:
     vault:
       enabled: true
       fail-fast: true
-      authentication: NONE
-      {{ range service "product-api-db" }}
-      host: server-a-1
-      port: 8200
+      authentication: TOKEN
+      token: ${VAULT_TOKEN}
+      {{ range service "vault" }}
+      host: vault.service.dc1.global
+      port: {{ .Port }}
+      {{ end }}
       scheme: http
       kv:
         enabled: false
@@ -163,4 +165,5 @@ EOF
     }
   }
 
+}
 }

@@ -2,7 +2,7 @@ resource "random_pet" "pet_name" {
 }
 
 resource "random_pet" "random_password" {
-  length = 2
+  length = 4
 }
 
 #Create New HCP Project for these resources

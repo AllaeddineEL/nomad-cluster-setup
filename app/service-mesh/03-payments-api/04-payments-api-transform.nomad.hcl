@@ -142,25 +142,31 @@ EOF
         destination   = "local/application.yaml"
         data = <<EOF
 spring:
-  application:
-    name: payments-api
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://product-api-db.virtual.global:5432/products
+    username: {{with secret "database/creds/product-api-db-owner"}}{{.Data.username}}{{end}}
+    password: {{with secret "database/creds/product-api-db-owner"}}{{.Data.password}}{{end}}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update 
     show-sql: true
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+    generate-ddl: true
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
 management:
   endpoint:
     health:
       show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 EOF
     }
   }

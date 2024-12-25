@@ -38,16 +38,15 @@ license_path = "/etc/consul.d/license.hclic"
 ui_config {
   enabled = true
 
-#   dashboard_url_templates {
-#     service = "http://:3000/d/hashicups/hashicups?orgId=1&var-service={{Service.Name}}"
-#   }
+  dashboard_url_templates {
+    service = "http://grafana.service.dc1.global:3000/d/hashicups/hashicups?orgId=1&var-service={{Service.Name}}"
+  }
+  metrics_provider = "prometheus"
 
-#   metrics_provider = "prometheus"
-
-#   metrics_proxy {
-#     base_url = "http://:9009/prometheus"
-#     path_allowlist = ["/api/v1/query_range", "/api/v1/query", "/prometheus/api/v1/query_range", "/prometheus/api/v1/query"]
-#   }
+  metrics_proxy {
+    base_url = "http://prometheus-server.service.dc1.global:9009"
+   # path_allowlist = ["/api/v1/query_range", "/api/v1/query", "/prometheus/api/v1/query_range", "/prometheus/api/v1/query"]
+  }
 }
 
 # -----------------------------+
@@ -74,7 +73,7 @@ addresses {
 ports {
   http        = 8500
   https       = 8443
-  grpc        = -1
+  grpc        = 8502
   grpc_tls    = 8503
   dns         = 8600
 }

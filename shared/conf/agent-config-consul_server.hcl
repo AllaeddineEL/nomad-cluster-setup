@@ -44,7 +44,7 @@ ui_config {
   metrics_provider = "prometheus"
 
   metrics_proxy {
-    base_url = "http://prometheus-server.service.dc1.global:9009"
+    base_url = "http://prometheus-server.service.dc1.global:9090"
    # path_allowlist = ["/api/v1/query_range", "/api/v1/query", "/prometheus/api/v1/query_range", "/prometheus/api/v1/query"]
   }
 }

@@ -54,15 +54,25 @@ job "nginx-reverse-proxy" {
     count = 1
     network {
       mode = "bridge"
+      port "expose" {}     
+      port "envoy_metrics" {
+        to = 9102
+      }
     }
     service {
       name = "nginx"
       provider = "consul"
       port = "${var.nginx_port}"
+      meta {
+        envoy_metrics_port = "${NOMAD_HOST_PORT_envoy_metrics}"
+      }
       connect {
         sidecar_service {
           proxy {
             transparent_proxy {
+            }
+            config {
+              envoy_prometheus_bind_addr = "0.0.0.0:9102"
             }
           }
         }

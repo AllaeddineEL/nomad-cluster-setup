@@ -8,3 +8,6 @@ service_prefix "" {
 node_prefix "" {
 	policy = "read"
 }
+agent_prefix "" {
+  policy = "read"
+}

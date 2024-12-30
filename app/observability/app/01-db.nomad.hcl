@@ -89,6 +89,14 @@ job "product-api-db" {
       connect {
         sidecar_service {
           proxy {
+            expose {
+              path {
+                path            = "/metrics"
+                protocol        = "http"
+                local_path_port = 9102
+                listener_port   = "envoy_metrics"
+              }
+            }
             transparent_proxy {
             }
             config {

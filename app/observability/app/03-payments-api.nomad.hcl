@@ -9,9 +9,15 @@ variable "region" {
   type        = string
   default     = "global"
 }
+
+variable "payments_version" {
+  description = "Docker version tag"
+  default = "v0.0.16"
+}
+
 variable "nomad_ns" {
   description = "The Namespace name to deploy the DB task"
-  default = "frontend-team"
+  default = "backend-team"
 }
 variable "product_api_port" {
   description = "Product API Port"
@@ -42,32 +48,42 @@ variable "db_port" {
   description = "Postgres Database Port"
   default = 5432
 }
+
 # Begin Job Spec
 
-job "frontend" {
+job "payments-api" {
   type   = "service"
   region = var.region
   datacenters = var.datacenters
-  namespace = var.nomad_ns
-  group "frontend" {
+  namespace   = var.nomad_ns
+
+  group "payments-api" {
     count = 1
     network {
       mode = "bridge"
       port "expose" {}     
       port "envoy_metrics" {
         to = 9102
-      }
+      } 
     }
     service {
-      name = "frontend"
+      name = "payments-api"
       provider = "consul"
-      port = "${var.frontend_port}"
+      port = "${var.payments_api_port}"
       meta {
         envoy_metrics_port = "${NOMAD_HOST_PORT_envoy_metrics}"
       }
       connect {
         sidecar_service {
           proxy {
+            expose {
+              path {
+                path            = "/metrics"
+                protocol        = "http"
+                local_path_port = 9102
+                listener_port   = "envoy_metrics"
+              }
+            }
             transparent_proxy {
             }
             config {
@@ -76,30 +92,40 @@ job "frontend" {
           }
         }
       }
+
       check {
-        name      = "Frontend ready"
+        name      = "Payments API ready"
         address_mode = "alloc"
         type      = "http"
-        path      = "/"
+        path			= "/actuator/health"
         interval  = "5s"
         timeout   = "5s"
         expose   = true
       }
     }
-    task "frontend" {
+    task "payments-api" {
       driver = "docker"
       meta {
-        service = "frontend"
+        service = "payments-api"
       }
       config {
-        image = "hashicorpdemoapp/frontend:v1.0.9"
-        ports = ["${var.frontend_port}"]
+        image   = "hashicorpdemoapp/payments:${var.payments_version}"
+        ports = ["${var.payments_api_port}"]
+        mount {
+          type   = "bind"
+          source = "local/application.properties"
+          target = "/application.properties"
+        }
       }
-      env {
-          NEXT_PUBLIC_FOOTER_FLAG = "HashiCups instance ${NOMAD_ALLOC_INDEX}"
-          NEXT_PUBLIC_PUBLIC_API_URL="/"
-          PORT="${var.frontend_port}"
-      }      
+      resources {
+        cpu    = 500
+        memory = 500
+      }
+      template {
+        data = "server.port=${var.payments_api_port}"
+        destination = "local/application.properties"
+      }
     }
   }
+
 }

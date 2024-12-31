@@ -6,8 +6,8 @@ job "prometheus" {
 
     network {
       mode = "bridge"
-      port "envoy_metrics" {
-        to = 9102
+      port "prom" {
+        to = "9090"
       }       
     }
 
@@ -51,17 +51,37 @@ scrape_configs:
         regex: ([^:]+)(?::\d+)?;(\d+)
         replacement: $1:$2
         target_label: __address__
+
+  - job_name: 'nomad_metrics'
+    scheme: https
+    tls_config:
+      insecure_skip_verify: true
+    consul_sd_configs:
+    - server: '172.17.0.1:8500'
+      services: ['nomad-client', 'nomad']
+    relabel_configs:
+      - source_labels: ['__meta_consul_tags']
+        regex: '(.*)http(.*)'
+        action: keep
+    scrape_interval: 5s
+    metrics_path: /v1/metrics
+    params:
+      format: ['prometheus']     
 EOH
       }
 
       driver = "docker"
       config {
         image = "prom/prometheus:latest"
+        ports = [
+          "prom"
+        ]
         args = [
           "--config.file=/local/prometheus.yml",
           "--storage.tsdb.path=/alloc/data",
           "--web.listen-address=0.0.0.0:9090",
-          "--web.route-prefix=/prometheus",
+          "--log.level=debug",
+          "--web.external-url=/",
           "--web.console.libraries=/usr/share/prometheus/console_libraries",
           "--web.console.templates=/usr/share/prometheus/consoles"
         ]        
@@ -73,19 +93,13 @@ EOH
 
     service {
       name = "prometheus-server"
-      port = "9090"
-
+      port = "prom"
       check {
-        name     = "prometheus_ui port alive"
-        expose   = true
+        name     = "prometheus"
         type     = "http"
-        path     = "/prometheus/-/healthy"
+        path     = "/-/healthy"
         interval = "10s"
         timeout  = "2s"
-      }
-
-      connect {
-        sidecar_service {}
       }
     }
   }

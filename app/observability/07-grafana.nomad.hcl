@@ -4,43 +4,24 @@ job "grafana" {
 
     network {
       mode = "bridge"
-      port "expose" {}
+      port "grafana" {
+         to = "3000"
+      }
     }
 
     service {
       name = "grafana"
-      port = "3000"
+      port = "grafana"
       meta {
         metrics_port = "${NOMAD_HOST_PORT_expose}"
       }
 
       check {
-        expose   = true
         type     = "http"
         name     = "grafana"
         path     = "/api/health"
         interval = "30s"
         timeout  = "10s"
-      }
-
-      connect {
-        sidecar_service {
-          proxy {
-            expose {
-              path {
-                path            = "/metrics"
-                protocol        = "http"
-                local_path_port = 9102
-                listener_port   = "expose"
-              }
-            }
-            transparent_proxy {
-            }
-            config {
-              envoy_prometheus_bind_addr = "0.0.0.0:9102"
-            }
-          }
-        }
       }
     }
 
@@ -67,9 +48,6 @@ job "grafana" {
         data        = <<EOF
 [database]
 type = sqlite3
-[server]
-serve_from_sub_path = true
-root_url = "/grafana"
 EOF
       }
 
@@ -77,12 +55,13 @@ EOF
         destination = "local/provisioning/datasources/prom.yml"
         data        = <<EOF
 apiVersion: 1
-
 datasources:
 - name: Prometheus
   type: prometheus
   access: proxy
-  url: http://prometheus-server.service.dc1.global:9090
+  {{- range service "prometheus-server" }}
+  url: http://{{ .Address }}:{{ .Port }}
+  {{- end }}
   isDefault: true
   editable: false
 EOF         

@@ -126,13 +126,32 @@ resource "boundary_target" "hashicups" {
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }
 
-resource "boundary_target" "frontend" {
+data "consul_service" "prometheus" {
+  name       = "prometheus-server"
+  datacenter = "dc1"
+}
+data "consul_service" "grafana" {
+  name       = "grafana"
+  datacenter = "dc1"
+}
+resource "boundary_target" "prometheus" {
   type                     = "tcp"
   name                     = "frontend"
-  description              = "Connect to the frontend App"
+  description              = "Connect to the prometheus server"
   scope_id                 = boundary_scope.dev_project.id
   session_connection_limit = -1
-  default_port             = 3000
-  address                  = "frontend.service.dc1.global"
+  default_port             = data.consul_service.prometheus.port
+  address                  = "prometheus-server.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }
+resource "boundary_target" "grafana" {
+  type                     = "tcp"
+  name                     = "frontend"
+  description              = "Connect to the grafana"
+  scope_id                 = boundary_scope.dev_project.id
+  session_connection_limit = -1
+  default_port             = data.consul_service.grafana.port
+  address                  = "grafana.service.dc1.global"
+  egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
+}
+

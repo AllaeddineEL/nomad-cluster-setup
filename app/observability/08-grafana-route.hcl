@@ -16,11 +16,6 @@ Rules = [
       {
         Name = "grafana"
       }
-      Filters = {
-        URLRewrite = {
-          Path = "/"
-        }
-      }
     ]
   }
 ]

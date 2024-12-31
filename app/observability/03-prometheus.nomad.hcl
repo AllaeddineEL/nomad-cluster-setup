@@ -61,7 +61,7 @@ EOH
           "--config.file=/local/prometheus.yml",
           "--storage.tsdb.path=/alloc/data",
           "--web.listen-address=0.0.0.0:9090",
-          "--web.external-url=/",
+          "--web.route-prefix=/prometheus",
           "--web.console.libraries=/usr/share/prometheus/console_libraries",
           "--web.console.templates=/usr/share/prometheus/consoles"
         ]        
@@ -79,15 +79,13 @@ EOH
         name     = "prometheus_ui port alive"
         expose   = true
         type     = "http"
-        path     = "/-/healthy"
+        path     = "/prometheus/-/healthy"
         interval = "10s"
         timeout  = "2s"
       }
 
       connect {
         sidecar_service {}
-        transparent_proxy {
-        }
       }
     }
   }

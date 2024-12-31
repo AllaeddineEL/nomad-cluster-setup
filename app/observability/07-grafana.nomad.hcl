@@ -68,6 +68,8 @@ job "grafana" {
 [database]
 type = sqlite3
 [server]
+serve_from_sub_path = true
+root_url = "/grafana"
 EOF
       }
 

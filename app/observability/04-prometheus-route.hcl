@@ -16,11 +16,6 @@ Rules = [
       {
         Name = "prometheus-server"
       }
-      Filters = {
-        URLRewrite = {
-          Path = "/"
-        }
-      }
     ]
   }
 ]

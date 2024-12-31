@@ -61,6 +61,9 @@ job "payments-api" {
     count = 1
     network {
       mode = "bridge"
+      port "envoy_metrics" {
+        to = 9102
+      } 
     }
     service {
       name = "payments-api"

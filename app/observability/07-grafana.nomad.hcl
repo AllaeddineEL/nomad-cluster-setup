@@ -82,7 +82,7 @@ datasources:
 - name: Prometheus
   type: prometheus
   access: proxy
-  url: http://prometheus-server.virtual.global:9090
+  url: http://prometheus-server.service.dc1.global:9090
   isDefault: true
   editable: false
 EOF         

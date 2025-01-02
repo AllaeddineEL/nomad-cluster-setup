@@ -67,6 +67,43 @@ datasources:
 EOF         
       perms = "777"
       }
+      template {
+        data        = <<EOF
+apiVersion: 1
+providers:
+  - name: dashboards
+    type: file
+    updateIntervalSeconds: 30
+    options:
+      foldersFromFilesStructure: true
+      path: /local/provisioning/dashboards
+EOF
+        destination = "/local/provisioning/dashboards/dashboards.yaml"
+      }
+      template {
+        data            = file(abspath("./dashboards/allocations.json"))
+        destination     = "local/provisioning/dashboards/nomad/allocations.json"
+        left_delimiter  = "[["
+        right_delimiter = "]]"
+      }
+      template {
+        data            = file(abspath("./dashboards/clients.json"))
+        destination     = "local/provisioning/dashboards/nomad/clients.json"
+        left_delimiter  = "[["
+        right_delimiter = "]]"
+      }
+      template {
+        data            = file(abspath("./dashboards/server.json"))
+        destination     = "local/provisioning/dashboards/nomad/server.json"
+        left_delimiter  = "[["
+        right_delimiter = "]]"
+      }
+      template {
+        data            = file(abspath("./dashboards/consulservicedashboard.json"))
+        destination     = "local/provisioning/dashboards/consul/consulservicedashboard.json"
+        left_delimiter  = "[["
+        right_delimiter = "]]"
+      }
     }
   }
 }

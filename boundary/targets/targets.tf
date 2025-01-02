@@ -136,22 +136,21 @@ data "consul_service" "grafana" {
 }
 resource "boundary_target" "prometheus" {
   type                     = "tcp"
-  name                     = "frontend"
+  name                     = "prometheus"
   description              = "Connect to the prometheus server"
   scope_id                 = boundary_scope.dev_project.id
   session_connection_limit = -1
-  default_port             = data.consul_service.prometheus.port
+  default_port             = data.consul_service.prometheus.service.0.port
   address                  = "prometheus-server.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }
 resource "boundary_target" "grafana" {
   type                     = "tcp"
-  name                     = "frontend"
+  name                     = "grafana"
   description              = "Connect to the grafana"
   scope_id                 = boundary_scope.dev_project.id
   session_connection_limit = -1
-  default_port             = data.consul_service.grafana.port
+  default_port             = data.consul_service.grafana.service.0.port
   address                  = "grafana.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }
-

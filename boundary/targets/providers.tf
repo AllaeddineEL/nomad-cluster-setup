@@ -23,6 +23,10 @@ terraform {
       source  = "hashicorp/boundary"
       version = "~> 1.1.15"
     }
+    consul = {
+      source  = "hashicorp/consul"
+      version = "~> 2.21.0"
+    }
     time = {
       source  = "hashicorp/time"
       version = "~> 0.12.1"
@@ -35,4 +39,8 @@ provider "boundary" {
   auth_method_id         = data.terraform_remote_state.boundary_cluster.outputs.boundary_admin_auth_method
   auth_method_login_name = "admin"
   auth_method_password   = data.terraform_remote_state.boundary_cluster.outputs.boundary_admin_password
+}
+
+provider "consul" {
+
 }

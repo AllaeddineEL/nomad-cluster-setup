@@ -59,7 +59,7 @@ job "vault-cluster" {
       }
 
       config {
-        image      = "hashicorp/vault-enterprise:1.17.4-ent"
+        image      = "hashicorp/vault-enterprise:1.18.3-ent"
         privileged = true
         network_mode = "host"
         ports = [

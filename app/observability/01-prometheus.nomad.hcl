@@ -1,6 +1,11 @@
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "observability"
+}
+
 job "prometheus" {
   type = "service"
-
+  namespace   = var.nomad_ns
   group "prometheus" {
     count = 1
 

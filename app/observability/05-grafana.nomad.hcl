@@ -1,4 +1,11 @@
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "observability"
+}
+
 job "grafana" {
+  type = "service"
+  namespace   = var.nomad_ns
   group "grafana" {
     count = 1
 

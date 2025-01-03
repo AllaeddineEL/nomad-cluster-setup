@@ -4,11 +4,6 @@ terraform {
       source  = "hashicorp/nomad"
       version = "2.3.1"
     }
-
-    terracurl = {
-      source  = "devops-rob/terracurl"
-      version = "1.2.1"
-    }
     boundary = {
       source  = "hashicorp/boundary"
       version = "1.1.15"
@@ -37,21 +32,6 @@ provider "google" {
   region  = var.region
   zone    = var.zone
 }
-
-provider "terracurl" {}
-
-
-provider "consul" {
-
-}
-
-data "consul_keys" "nomad_token" {
-  key {
-    name = "nomad_mgmt_token"
-    path = "nomad_mgmt_token"
-  }
-}
-
 provider "nomad" {
 
 }

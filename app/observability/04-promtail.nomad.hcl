@@ -1,7 +1,13 @@
+variable "nomad_ns" {
+  description = "The Namespace name to deploy the DB task"
+  default = "observability"
+}
 job "promtail" {
   datacenters = ["dc1"]
+  namespace   = var.nomad_ns
   # Runs on all nomad clients
-  type = "system"
+  type  = "service"
+  #type = "system"
 
   group "promtail" {
     count = 1
@@ -30,8 +36,9 @@ positions:
   filename: /data/positions.yaml
 
 clients:
-  - url: http://loki.service.dc1.consul:3100/loki/api/v1/push
-
+  {{- range service "loki" }}
+  - url: http://{{ .Address }}:{{ .Port }}/loki/api/v1/push
+  {{- end }}
 scrape_configs:
 - job_name: 'nomad-logs'
   consul_sd_configs:
@@ -66,7 +73,7 @@ EOTC
       }
 
       config {
-        image = "grafana/promtail:demo"
+        image = "grafana/promtail:3.3.2"
         ports = ["http"]
         args = [
           "-config.file=/local/promtail.yml",
@@ -86,7 +93,7 @@ EOTC
       service {
         name = "promtail"
         port = "http"
-
+        provider = "consul"
         check {
           name     = "Promtail HTTP"
           type     = "http"

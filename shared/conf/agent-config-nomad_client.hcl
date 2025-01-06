@@ -16,6 +16,13 @@ log_level = "INFO"
 # enable_syslog = false
 enable_debug = false
 
+plugin "docker" {
+    config {
+      volumes {
+        enabled = true
+      }
+    }
+  }
 # -----------------------------+
 # CLIENT CONFIG                |
 # -----------------------------+

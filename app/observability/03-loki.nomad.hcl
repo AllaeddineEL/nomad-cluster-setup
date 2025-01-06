@@ -26,7 +26,7 @@ job "loki" {
       driver = "docker"
 
       config {
-        image = "grafana/loki:demo"
+        image = "grafana/loki:3.3.2"
         ports = ["http"]
         args = [
           "-config.file",
@@ -42,8 +42,7 @@ job "loki" {
       service {
         name = "loki"
         port = "http"
-        tags = ["monitoring","prometheus"]
-
+        provider = "consul"
         check {
           name     = "Loki HTTP"
           type     = "http"

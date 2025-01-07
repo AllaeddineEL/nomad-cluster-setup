@@ -154,3 +154,17 @@ resource "boundary_target" "grafana" {
   address                  = "grafana.service.dc1.global"
   egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
 }
+data "consul_service" "promtail" {
+  name       = "promtail"
+  datacenter = "dc1"
+}
+resource "boundary_target" "promtail" {
+  type                     = "tcp"
+  name                     = "promtail"
+  description              = "Connect to the promtail"
+  scope_id                 = boundary_scope.dev_project.id
+  session_connection_limit = -1
+  default_port             = data.consul_service.promtail.service.0.port
+  address                  = "promtail.service.dc1.global"
+  egress_worker_filter     = "\"${var.region}\" in \"/tags/region\""
+}

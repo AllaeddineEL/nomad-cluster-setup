@@ -71,6 +71,12 @@ datasources:
   {{- end }}
   isDefault: true
   editable: false
+- name: Loki
+  type: loki
+  access: proxy
+  {{- range service "loki" }}
+  url: http://{{ .Address }}:{{ .Port }}
+  {{- end }}
 EOF         
       perms = "777"
       }
@@ -108,6 +114,12 @@ EOF
       template {
         data            = file(abspath("./dashboards/consulservicedashboard.json"))
         destination     = "local/provisioning/dashboards/consul/consulservicedashboard.json"
+        left_delimiter  = "[["
+        right_delimiter = "]]"
+      }
+      template {
+        data            = file(abspath("./dashboards/consulservicetoservicedashboard.json"))
+        destination     = "local/provisioning/dashboards/consul/consulservicetoservicedashboard.json"
         left_delimiter  = "[["
         right_delimiter = "]]"
       }

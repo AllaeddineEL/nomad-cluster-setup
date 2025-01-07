@@ -6,8 +6,8 @@ job "promtail" {
   datacenters = ["dc1"]
   namespace   = var.nomad_ns
   # Runs on all nomad clients
-  type  = "service"
-  #type = "system"
+  #type  = "service"
+  type = "system"
 
   group "promtail" {
     count = 1
@@ -28,7 +28,7 @@ job "promtail" {
       driver = "docker"
 
       env {
-        HOSTNAME = "${attr.unique.hostname}"
+        HOSTNAME = "${attr.unique.consul.name}"
       }
       template {
         data        = <<EOTC

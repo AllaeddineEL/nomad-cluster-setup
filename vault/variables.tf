@@ -18,3 +18,6 @@ variable "name" {
   default     = "nomad"
 }
 
+variable "vault_version" {
+  default = "1.20.3"
+}

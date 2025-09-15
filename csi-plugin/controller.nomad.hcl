@@ -1,12 +1,12 @@
-job "controller" {
+job "csi-controller" {
   namespace   = "nomad-system"
   datacenters = ["dc1"]
-  group "controller" {
+  group "csi-controller" {
     task "plugin" {
       driver = "docker"
       template {
         data = <<EOH
-{{ key "service_account" }}
+{{ with nomadVar "nomad/jobs/csi-controller" }}{{ .service_account }}{{ end }}
 EOH
   destination = "secrets/creds.json"
       }

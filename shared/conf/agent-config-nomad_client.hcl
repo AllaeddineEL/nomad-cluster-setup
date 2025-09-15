@@ -40,6 +40,13 @@ plugin "docker" {
     }
   }
 }
+plugin "nomad-driver-exec2" {
+  config {
+    unveil_defaults = true
+    unveil_paths    = []
+    unveil_by_task  = true
+  }
+}
 # -----------------------------+
 # NETWORKING CONFIG            |
 # -----------------------------+

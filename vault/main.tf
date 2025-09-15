@@ -82,6 +82,7 @@ job "vault-cluster" {
         data = <<EOH
 ui = true
 cluster_name = "nomad-vault-demo"
+disable_mlock = true
 listener "tcp" {
   address         = "[::]:8200"
   cluster_address = "[::]:8201"

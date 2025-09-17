@@ -1,9 +1,9 @@
 terraform {
-  required_version = ">= 0.12"
+  required_version = ">= 0.13.1"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.46.0"
+      version = "6.13.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -29,12 +29,26 @@ terraform {
       source  = "hashicorp/time"
       version = "~> 0.12.1"
     }
+    hcp = {
+      source  = "hashicorp/hcp"
+      version = ">= 0.18.0"
+    }
   }
 }
+resource "random_string" "tutorial" {
+  length  = 4
+  special = false
+  upper   = false
+}
 
+
+
+provider "aws" {
+  region = var.aws_region
+}
 provider "google" {
   project = var.project
-  region  = var.region
+  region  = var.gcp_region
   zone    = var.zone
 }
 

@@ -116,7 +116,7 @@ resource "google_compute_instance" "server" {
 
   metadata_startup_script = templatefile("${path.module}/../shared/data-scripts/user-data-server.sh", {
     server_count   = var.server_count
-    region         = var.region
+    region         = var.gcp_region
     cloud_env      = "gce"
     retry_join     = var.retry_join
     lb_ip          = google_compute_forwarding_rule.servers_default.ip_address
@@ -180,7 +180,7 @@ resource "google_compute_instance" "client" {
   }
 
   metadata_startup_script = templatefile("${path.module}/../shared/data-scripts/user-data-client.sh", {
-    region     = var.region
+    region     = var.gcp_region
     cloud_env  = "gce"
     retry_join = var.retry_join
 

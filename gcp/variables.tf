@@ -2,10 +2,12 @@ variable "project" {
   description = "The GCP project to use."
 }
 
-variable "region" {
+variable "gcp_region" {
   description = "The GCP region to deploy to."
 }
-
+variable "aws_region" {
+  default = "eu-central-1"
+}
 variable "zone" {
   description = "The GCP zone to deploy to."
 }
@@ -45,7 +47,10 @@ variable "client_count" {
   description = "The number of clients to provision."
   default     = "3"
 }
-
+variable "aws_client_count" {
+  description = "The number of AWS clients to provision."
+  default     = "1"
+}
 variable "root_block_device_size" {
   description = "The volume size of the root block device."
   default     = 20

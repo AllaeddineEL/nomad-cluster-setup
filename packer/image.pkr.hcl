@@ -44,6 +44,9 @@ source "amazon-ebs" "ubuntu" {
     owners      = ["099720109477"]
   }
   ssh_username = "ubuntu"
+  tags = {
+    Name = "{{ .SourceAMIName }}"
+  }
 }
 build {
   sources = ["source.googlecompute.ubuntu",

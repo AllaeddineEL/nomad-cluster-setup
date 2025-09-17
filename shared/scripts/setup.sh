@@ -19,7 +19,7 @@ CONSULTEMPLATEDIR=/opt/consul-template
 # Dependencies
 case $CLOUD_ENV in
   aws)
-    sudo apt-get install -y software-properties-common
+    sudo apt-get update && sudo apt-get install -y software-properties-common
     ;;
 
   gce)

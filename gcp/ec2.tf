@@ -20,7 +20,7 @@ resource "aws_key_pair" "consul_client" {
 resource "aws_security_group" "allow_ssh" {
   name        = "allow_ssh"
   description = "Allow SSH inbound traffic"
-  vpc_id      = module.vpc.default_vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   ingress {
     description      = "SSH into instance"
@@ -59,14 +59,14 @@ resource "aws_instance" "consul_client" {
     consul_node_name = "consul-aws-client-${count.index}",
 
     consul_encryption_key = random_id.consul_gossip_key.b64_std,
-    consul_agent_token    = "${data.consul_acl_token_secret_id.consul-client-agent-token[count.index].secret_id}",
-    consul_default_token  = "${data.consul_acl_token_secret_id.consul-client-default-token[count.index].secret_id}",
+    consul_agent_token    = "${data.consul_acl_token_secret_id.aws-consul-client-agent-token[count.index].secret_id}",
+    consul_default_token  = "${data.consul_acl_token_secret_id.aws-consul-client-default-token[count.index].secret_id}",
     nomad_node_name       = "nomad-aws-client-${count.index}",
     nomad_agent_meta      = "isPublic = false"
-    nomad_agent_token     = "${data.consul_acl_token_secret_id.nomad-client-consul-token[count.index].secret_id}",
+    nomad_agent_token     = "${data.consul_acl_token_secret_id.aws-nomad-client-consul-token[count.index].secret_id}",
     ca_certificate        = base64gzip("${tls_self_signed_cert.datacenter_ca.cert_pem}"),
-    agent_certificate     = base64gzip("${tls_locally_signed_cert.client_cert[count.index].cert_pem}"),
-    agent_key             = base64gzip("${tls_private_key.client_key[count.index].private_key_pem}")
+    agent_certificate     = base64gzip("${tls_locally_signed_cert.aws_client_cert[count.index].cert_pem}"),
+    agent_key             = base64gzip("${tls_private_key.aws_client_key[count.index].private_key_pem}")
   })
 
   tags = {

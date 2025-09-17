@@ -50,7 +50,7 @@ resource "aws_instance" "consul_client" {
   key_name = aws_key_pair.consul_client.key_name
 
   user_data = templatefile("${path.module}/../shared/data-scripts/user-data-client.sh", {
-    region     = local.aws_region
+    region     = var.aws_region
     cloud_env  = "aws"
     retry_join = google_compute_forwarding_rule.servers_default.ip_address
 

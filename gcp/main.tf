@@ -217,7 +217,7 @@ resource "google_compute_target_pool" "servers" {
 }
 resource "google_compute_router" "router" {
   name    = "hashistack-${var.name}"
-  region  = var.region
+  region  = var.gcp_region
   network = google_compute_network.hashistack.id
 
   bgp {

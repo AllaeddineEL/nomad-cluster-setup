@@ -45,7 +45,7 @@ source "amazon-ebs" "ubuntu" {
   }
   ssh_username = "ubuntu"
   tags = {
-    Name = "{{ .SourceAMIName }}"
+    Name = "hashistack-${local.timestamp}"
   }
 }
 build {

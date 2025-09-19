@@ -63,13 +63,14 @@ connect {
 }
 
 # Addresses and ports
-client_addr = "127.0.0.1"
-bind_addr   = "_CONSUL_BIND_ADDR"
+client_addr = "0.0.0.0"
+bind_addr   = "0.0.0.0"
+advertise_addr = "_CONSUL_BIND_ADDR"
 
 addresses {
-  grpc = "127.0.0.1"
-  grpc_tls = "127.0.0.1"
-  http = "127.0.0.1"
+  grpc = "0.0.0.0"
+  grpc_tls = "0.0.0.0"
+  http = "0.0.0.0"
   https = "0.0.0.0"
   dns = "0.0.0.0"
 }

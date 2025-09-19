@@ -1,5 +1,23 @@
 resource "google_compute_network" "hashistack" {
-  name = "hashistack-${var.name}"
+  name                    = "hashistack-${var.name}"
+  auto_create_subnetworks = false
+}
+
+
+resource "google_compute_subnetwork" "hashistack" {
+  name          = "hashistack-subnet"
+  ip_cidr_range = "10.0.0.0/16"
+  region        = var.gcp_region
+  network       = google_compute_network.hashistack.id
+}
+
+resource "google_compute_address" "hashistack" {
+  count        = var.server_count
+  name         = "hashistack-internal-address-${count.index}"
+  subnetwork   = google_compute_subnetwork.hashistack.id
+  address_type = "INTERNAL"
+  address      = "10.0.1.1${count.index}"
+  region       = var.gcp_region
 }
 
 resource "google_compute_firewall" "consul_nomad_ui_ingress" {
@@ -119,10 +137,9 @@ resource "google_compute_instance" "server" {
   }
 
   network_interface {
-    network = google_compute_network.hashistack.name
-    # access_config {
-    #   // Leave empty to get an ephemeral public IP
-    # }
+    network    = google_compute_network.hashistack.name
+    subnetwork = google_compute_subnetwork.hashistack.name
+    network_ip = google_compute_address.hashistack[count.index].address
   }
 
   service_account {
@@ -181,10 +198,8 @@ resource "google_compute_instance" "client" {
   }
 
   network_interface {
-    network = google_compute_network.hashistack.name
-    # access_config {
-    #   // Leave empty to get an ephemeral public IP
-    # }
+    network    = google_compute_network.hashistack.name
+    subnetwork = google_compute_subnetwork.hashistack.name
   }
 
   service_account {

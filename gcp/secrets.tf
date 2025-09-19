@@ -136,11 +136,13 @@ resource "tls_cert_request" "client_csr" {
     "consul-client-${count.index}.${var.datacenter}.${var.domain}",
     "nomad-client-${count.index}.${var.datacenter}.${var.domain}",
     "client.global.nomad",
-    "localhost"
+    "localhost",
+    "${google_compute_forwarding_rule.servers_default.ip_address}"
   ]
 
   ip_addresses = [
-    "127.0.0.1"
+    "127.0.0.1",
+    "${google_compute_forwarding_rule.servers_default.ip_address}"
   ]
 }
 
